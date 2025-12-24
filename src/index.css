@@ -134,9 +134,11 @@ body {
   padding: 1.5rem;
   border-radius: 10px;
   transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
 .service-card:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   transform: translateY(-5px);
 }
 
@@ -145,6 +147,46 @@ body {
   font-weight: 600;
   margin-top: 0.5rem;
 }
+
+
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--dark-gray);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal h3 {
+  font-family: "Montserrat", sans-serif;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.modal-close {
+  margin-top: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--muted-gray);
+  cursor: pointer;
+}
+
+
+
+
 
 /* Button */
 .booking-btn {

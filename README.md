@@ -52,3 +52,40 @@ Clean separation of concerns
 Easy to swap images
 
 No hacks, no absolute positioning nightmares
+
+
+Modal
+At this point:
+
+Clicking a card opens a modal
+
+The modal knows which service was clicked
+
+No routing yet
+
+No scheduling logic yet
+
+Exactly where we want to be.
+
+
+Modal Styling
+
+Proper overlay
+
+Focused interaction
+
+Clean exit
+
+No jank
+
+You now have:
+
+Clickable service cards
+
+Service-aware UI (huge)
+
+A booking entry point
+
+Zero routing complexity
+
+A foundation that scales
