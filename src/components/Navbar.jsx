@@ -1,7 +1,7 @@
 function Navbar() {
     return (
       <nav className="navbar">
-        <h1 className="logo">Clips Grooming</h1>
+        <h1 className="logo">Zandalio's Grooming</h1>
 
         <ul className="nav-links">
           <li>Home</li>
