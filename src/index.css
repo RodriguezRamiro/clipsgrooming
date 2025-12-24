@@ -29,7 +29,27 @@ body {
   background: var(--dark-gray);
 }
 
+/* Logo */
 .logo {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.logo-text {
   font-family: "Montserrat", sans-serif;
   font-size: 1.5rem;
   color: var(--gold);
@@ -241,4 +261,107 @@ body {
 .footer-logo {
   font-family: "Montserrat", sans-serif;
   color: var(--gold);
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+  /* Navbar */
+  .navbar {
+    padding: 1rem;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .logo-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-links {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Banner */
+  .banner {
+    height: 40vh;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .banner h2 {
+    font-size: 2rem;
+  }
+
+  /* Profile */
+  .profile {
+    margin-top: 60px;
+    padding: 0 1rem 2rem;
+  }
+
+  .profile-image-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile h3 {
+    font-size: 1.25rem;
+  }
+
+  .profile p {
+    font-size: 0.9rem;
+  }
+
+  /* Services */
+  .services {
+    padding: 3rem 1rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    padding: 1.25rem;
+  }
+
+  /* Time Slots */
+  .time-slots {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .time-slot {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  /* Modal */
+  .modal {
+    padding: 1.5rem;
+  }
+
+  .modal h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Button */
+  .booking-btn {
+    width: 90%;
+    font-size: 1rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 1.5rem 1rem;
+    font-size: 0.85rem;
+  }
 }

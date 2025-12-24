@@ -1,7 +1,15 @@
+import React from 'react';
+import logoImg from "../assets/barberLogo.png";
+
+
 function Navbar() {
     return (
       <nav className="navbar">
-        <h1 className="logo">Zandalio's Grooming</h1>
+        <div className="logo-wrapper">
+        <img src={logoImg} alt="Zandalio's Grooming logo" className="logo-img" />
+        <h1 className="logo-text">Zandalio's Grooming
+        </h1>
+        </div>
 
         <ul className="nav-links">
           <li><a href="#home">Home</a></li>
