@@ -149,6 +149,30 @@ body {
 }
 
 
+/* Time Slots */
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.time-slot {
+  padding: 0.5rem;
+  background: var(--black);
+  border: 1px solid var(--muted-gray);
+  color: var(--off-white);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.time-slot.active {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+}
+
+
 
 /* Modal */
 .modal-backdrop {

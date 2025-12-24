@@ -11,8 +11,25 @@ const services = [
     { name: "The VIP", price: "$75", description: "Full premium service" }
   ];
 
+  const timeSlots = [
+    "9:00 AM",
+    "9:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "1:00 PM",
+    "1:30 PM",
+    "2:00 PM",
+    "2:30 PM"
+  ];
+
+
   function Services() {
-    const [selectedService, setSelectedServices] = useState(null);
+    const [selectedService, setSelectedService] = useState(null);
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedTime, setSelectedTime] = useState("");
+
 
     return (
       <section className="services">
@@ -22,7 +39,7 @@ const services = [
           {services.map((service) => (
             <div className="service-card"
             key={service.name}
-            onClick={() => setSelectedServices(service)}
+            onClick={() => setSelectedService(service)}
             >
 
               <h3>{service.name}</h3>
@@ -32,17 +49,43 @@ const services = [
           ))}
         </div>
 
+        <div className="time-slots">
+            {timeSlots.map((time) => (
+                <button
+                key={time}
+                className={`time-slot ${selectedTime === time ? "active" : ""}`}
+                onClick={() => setSelectedTime(time)}
+                >
+                    {time}
+                </button>
+            ))}
+        </div>
+
         {/* Modal placeholder */}
         {selectedService && (
         <div className="modal-backdrop">
             <div className="modal">
-                <h3>{setSelectedServices.name}</h3>
+                <h3>{selectedService.name}</h3>
                 <p>{selectedService.description}</p>
                 <p className="price">{selectedService.price}</p>
 
-                <button className="booking-btn">Continue Booking</button>
+                <label className="modal-label">Select a date</label>
+                <input
+                type="date"
+                className="date-input"
+                onChange={(e) => setSelectedDate(e.target.value)}
+                />
+
+                <label className="modal-label">Selected</label>
+
+                <button
+                className="booking-btn"
+                disabled={!selectedDate || !selectedTime}
+                >
+                    Continue Booking
+                </button>
                 <button className="modal-close"
-                onClick={() => setSelectedServices(null)}
+                onClick={() => setSelectedService(null)}
                 >
                     Close
                 </button>
