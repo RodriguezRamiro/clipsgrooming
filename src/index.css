@@ -162,6 +162,11 @@ body {
   transform: translateY(-5px);
 }
 
+.service-card .booking-btn {
+  margin-top: 1rem;
+  width: 100%;
+}
+
 .price {
   color: var(--gold);
   font-weight: 600;
@@ -185,6 +190,14 @@ body {
   border-radius: 6px;
   cursor: pointer;
 }
+
+.time-slot.booked {
+  background: #333;
+  color: #777;
+  border-color: #444;
+  cursor: not-allowed;
+}
+
 
 .time-slot.active {
   background: var(--gold);

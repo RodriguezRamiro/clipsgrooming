@@ -30,6 +30,14 @@ const services = [
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState("");
 
+    // Mock Booking data (backend later)
+    const [bookedSlots , setBookedSlots] = useState({
+      "2025-01-10": ["9:00 AM", "10:30 AM"]
+    });
+
+    const isBooked = (date, time) =>
+    bookedSlot[date]?.includes(time);
+
 
     return (
       <section className="services">
@@ -38,27 +46,20 @@ const services = [
         <div className="services-grid">
           {services.map((service) => (
             <div className="service-card"
-            key={service.name}
-            onClick={() => setSelectedService(service)}
-            >
-
+            key={service.name}>
               <h3>{service.name}</h3>
               <p>{service.description}</p>
               <p className="price">{service.price}</p>
+              <button className="booking-btn"
+              onClick={() => {
+                selectedService(service);
+                setSelectedDate("");
+                setSelectedTime("");
+              }}>
+                Book Now
+              </button>
             </div>
           ))}
-        </div>
-
-        <div className="time-slots">
-            {timeSlots.map((time) => (
-                <button
-                key={time}
-                className={`time-slot ${selectedTime === time ? "active" : ""}`}
-                onClick={() => setSelectedTime(time)}
-                >
-                    {time}
-                </button>
-            ))}
         </div>
 
         {/* Modal placeholder */}
@@ -72,25 +73,54 @@ const services = [
                 <label className="modal-label">Select a date</label>
                 <input
                 type="date"
+                value={selectedDate}
                 className="date-input"
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setSelectedTime("");
+                }}
                 />
 
-                <label className="modal-label">Selected</label>
+                {selectedDate && (
+                  <>
+                  <label>Select a time</label>
+                  <div className="time-slots">
+                    {timeSlots.map(time => {
+                      const booked = isBooked(selectedDate, time);
+
+                      return (
+                        <button
+                        key={time}
+                        disabled={booked}
+                        className={`time-slots
+                        ${selectedTime === time ? "active" : ""}
+                        ${booked ? "booked" : ""}
+                        `}
+                        onClick={() => setSelectedTime(time)}
+                        >
+                          {booked ? "Booked" : time}
+                        </button>
+                      );
+                    })}
+                    </div>
+                    </>
+                )}
 
                 <button
                 className="booking-btn"
                 disabled={!selectedDate || !selectedTime}
                 >
-                    Continue Booking
+                  Continue Booking
                 </button>
-                <button className="modal-close"
+
+                <button
+                className="modal-close"
                 onClick={() => setSelectedService(null)}
                 >
-                    Close
+                  Close
                 </button>
+              </div>
             </div>
-        </div>
         )}
       </section>
     );

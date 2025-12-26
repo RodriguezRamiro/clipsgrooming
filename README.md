@@ -89,3 +89,27 @@ A booking entry point
 Zero routing complexity
 
 A foundation that scales
+
+
+UPDATED Services.jsx (Clean + Correct)
+🔧 Key Changes
+
+Time slots moved into modal
+
+Click handler moved to button, not whole card
+
+Availability logic added
+
+Disabled booked slots
+
+Why this works long-term
+
+Clear user intent (Book Now button)
+
+No accidental clicks
+
+Modal-driven booking = scalable
+
+Availability logic mirrors real booking systems
+
+Easy backend integration later (Stripe, calendar sync, SMS)
