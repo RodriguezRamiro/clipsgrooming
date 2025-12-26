@@ -206,6 +206,76 @@ body {
 }
 
 
+/* Hero */
+.hero {
+  position: relative;
+  height: 85vh;
+  background: linear-gradient(
+    rgba(0,0,0,0.75),
+    rgba(0,0,0,0.75)
+  ),
+  url("/banner.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-Content: center;
+  text-align: center;
+}
+
+.hero-overlay {
+  max-width: 700px;
+  padding: 2rem;
+}
+
+.hero-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 3.2rem;
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  color: var(--muted-gray);
+  margin: 1rem 0 2rem;
+  font-size: 1.1rem;
+}
+
+.hero-cta {
+  padding: 1rem 3rem;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-cta:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Profile Overlap */
+.hero-profile {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--gold);
+  background: var(--dark-gray);
+  z-index: 10;
+}
+
+.hero-profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
 
 /* Modal */
 .modal-backdrop {
@@ -355,6 +425,20 @@ body {
   .time-slot {
     font-size: 0.85rem;
     padding: 0.6rem;
+  }
+
+  .hero {
+    height: 70vh;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-profile {
+    width: 120px;
+    height: 120px;
+    bottom: -60px;
   }
 
   /* Modal */

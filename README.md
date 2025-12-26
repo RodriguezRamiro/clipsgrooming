@@ -151,3 +151,13 @@ Add authentication (admin vs client)
 Stripe payment confirmation locks slot
 
 Google Calendar sync
+
+Implementation
+
+No absolute positioning hacks
+Clean layering with position: relative
+Mobile-safe
+Brand-forward
+Matches premium barber & tattoo studios
+Easy to replace images
+CTA converts immediately
