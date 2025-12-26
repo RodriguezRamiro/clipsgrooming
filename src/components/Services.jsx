@@ -24,6 +24,17 @@ const services = [
     "2:30 PM"
   ];
 
+  const STORAGE_KEY = "clipsgrooming_bookings";
+
+  const loadBookings = () => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  };
+
+  const savedBookings = (bookings) => {
+    localStorage.setItem(STORAGE_KEY, JSON<stringify(bookings))
+  }
+
 
   function Services() {
     const [selectedService, setSelectedService] = useState(null);
@@ -31,12 +42,11 @@ const services = [
     const [selectedTime, setSelectedTime] = useState("");
 
     // Mock Booking data (backend later)
-    const [bookedSlots , setBookedSlots] = useState({
-      "2025-01-10": ["9:00 AM", "10:30 AM"]
-    });
+    const [bookedSlots, setBookedSlots] = useState(loadBookings);
 
-    const isBooked = (date, time) =>
-    bookedSlot[date]?.includes(time);
+    const isBooked = (date, serviceName, time) =>
+      bookedSlots[date]?.[serviceName]?.includes(time);
+
 
 
     return (
@@ -86,7 +96,11 @@ const services = [
                   <label>Select a time</label>
                   <div className="time-slots">
                     {timeSlots.map(time => {
-                      const booked = isBooked(selectedDate, time);
+                      const booked = isBooked(
+                        selectedDate,
+                        selectedService.name,
+                        time
+                      );
 
                       return (
                         <button
@@ -109,8 +123,26 @@ const services = [
                 <button
                 className="booking-btn"
                 disabled={!selectedDate || !selectedTime}
+                onClick={() => {
+                  const updatedBookings = { ...bookedSlots };
+
+                  if (!updatedBookings[selectedDate]) {
+                    updatedBookings[selectedDate] = {};
+                  }
+
+                  if (!updatedBookings[selectedDate][selectedService.name]){
+                  updatedBookings[selectedDate][selectedService.name]= [];
+                }
+
+                updatedBookings[selectedDate][selectedService.name].push(selectedTime);
+
+                setBookedSlots(updatedBookings);
+                savedBookings(updatedBookings);
+
+                setSelectedService(null);
+                }}
                 >
-                  Continue Booking
+                  Confirm Booking
                 </button>
 
                 <button
