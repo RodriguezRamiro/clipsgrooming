@@ -161,3 +161,38 @@ Brand-forward
 Matches premium barber & tattoo studios
 Easy to replace images
 CTA converts immediately
+
+Animation Plan (What We’re Adding)
+Hero content fades + lifts in
+
+Cinematic entrance
+
+Professional feel
+
+CTA button soft pulse
+
+Subconscious “click me”
+
+Stops on hover (important)
+
+Profile image slow float
+
+High-end studio look
+
+Gold ring subtly emphasized
+
+Eye-catching without screaming
+
+Stops on hover (feels responsive, not annoying)
+
+Gold glow reinforces brand color
+
+Result Now
+Cinematic hero entrance
+CTA that converts without being pushy
+Personal brand emphasis
+Premium barber / studio vibe
+Zero JS
+Zero dependencies
+Investor-ready feel
+exactly how high-end service sites animate.
