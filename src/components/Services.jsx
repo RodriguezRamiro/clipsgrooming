@@ -32,20 +32,20 @@ const services = [
   };
 
   const savedBookings = (bookings) => {
-    localStorage.setItem(STORAGE_KEY, JSON<stringify(bookings))
-  }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+  };
 
 
   function Services() {
     const [selectedService, setSelectedService] = useState(null);
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
-
     // Mock Booking data (backend later)
-    const [bookedSlots, setBookedSlots] = useState(loadBookings);
+    const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
 
     const isBooked = (date, serviceName, time) =>
       bookedSlots[date]?.[serviceName]?.includes(time);
+
 
 
 
@@ -56,16 +56,18 @@ const services = [
         <div className="services-grid">
           {services.map((service) => (
             <div className="service-card"
-            key={service.name}>
+              key={service.name}>
               <h3>{service.name}</h3>
               <p>{service.description}</p>
               <p className="price">{service.price}</p>
+
               <button className="booking-btn"
-              onClick={() => {
-                selectedService(service);
-                setSelectedDate("");
-                setSelectedTime("");
-              }}>
+                onClick={() => {
+                  setSelectedService(service);
+                  setSelectedDate("");
+                  setSelectedTime("");
+              }}
+            >
                 Book Now
               </button>
             </div>
@@ -85,7 +87,7 @@ const services = [
                 type="date"
                 value={selectedDate}
                 className="date-input"
-                onChange={(e) => {
+                onChange={e => {
                   setSelectedDate(e.target.value);
                   setSelectedTime("");
                 }}
@@ -106,10 +108,10 @@ const services = [
                         <button
                         key={time}
                         disabled={booked}
-                        className={`time-slots
-                        ${selectedTime === time ? "active" : ""}
-                        ${booked ? "booked" : ""}
-                        `}
+                        className={`time-slot
+                        ${booked ? "booked" : ""} ${
+                          selectedTime === time ? "active" : ''
+                        }`}
                         onClick={() => setSelectedTime(time)}
                         >
                           {booked ? "Booked" : time}
@@ -126,20 +128,13 @@ const services = [
                 onClick={() => {
                   const updatedBookings = { ...bookedSlots };
 
-                  if (!updatedBookings[selectedDate]) {
-                    updatedBookings[selectedDate] = {};
-                  }
+                  updated[selectedDate] ??= {};
+                  updated[selectedDate][selectedService.name] ??=[];
+                  updated[selectedDate][selectedService.name].push(selectedTime);
 
-                  if (!updatedBookings[selectedDate][selectedService.name]){
-                  updatedBookings[selectedDate][selectedService.name]= [];
-                }
-
-                updatedBookings[selectedDate][selectedService.name].push(selectedTime);
-
-                setBookedSlots(updatedBookings);
-                savedBookings(updatedBookings);
-
-                setSelectedService(null);
+                  setBookedSlots(updated);
+                  savedBookings(updated);
+                  setSelectedService(null);
                 }}
                 >
                   Confirm Booking

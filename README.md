@@ -201,3 +201,30 @@ exactly how high-end service sites animate.
 testing diffrent profile layout
 human anchor: image + name + role.
 asymetry Off-center = editorial, no floating animation
+
+Profile feels like a card
+Image is clearly a profile, not a logo
+Overlap is owned by Profile, not Banner
+Removing the banner still leaves a legit profile section
+No absolute-position nightmares
+Investor / premium-grade layout
+
+Confirmed UX Flow
+User clicks Book Now (from Profile or Service card)
+Modal opens
+User:
+selects a date
+sees available time slots
+booked slots are disabled
+User clicks Confirm Booking
+Slot is:
+saved to localStorage
+disabled on future opens
+Modal closes
+
+Why This Is the RIGHT Architecture
+Modal-based = fast, modern, mobile-first
+localStorage = MVP-ready, no backend yet
+Data structure = backend-compatible later
+No routing complexity
+Stripe drops in cleanly later
