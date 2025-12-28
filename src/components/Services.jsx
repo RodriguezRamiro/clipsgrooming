@@ -36,19 +36,13 @@ const services = [
   };
 
 
-  function Services( {bookingOpen, setBookingOpen }) {
+  function Services() {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
     const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
 
-
-    useEffect(() => {
-      if (bookingOpen && !selectedService) {
-        setSelectedService(services[0]);
-      }
-    }, [bookingOpen, selectedService]);
 
     const isBooked = (date, serviceName, time) =>
       bookedSlots[date]?.[serviceName]?.includes(time);
@@ -72,7 +66,6 @@ const services = [
                   setSelectedService(service);
                   setSelectedDate("");
                   setSelectedTime("");
-                  setBookingOpen(true);
               }}
             >
                 Book Now
@@ -82,14 +75,16 @@ const services = [
         </div>
 
         {/* Modal placeholder */}
-        {bookingOpen && selectedService && (
+        {selectedService && (
         <div className="modal-backdrop">
             <div className="modal">
                 <h3>{selectedService.name}</h3>
                 <p>{selectedService.description}</p>
                 <p className="price">{selectedService.price}</p>
 
+                <h3>Book Appointment</h3>
 
+                {/*Service Selector */}
                 <label>Service</label>
                 <select
                   value={selectedService.name}
@@ -98,6 +93,7 @@ const services = [
                       s => s.name === e.target.value
                     );
                     setSelectedService(service);
+                    // reset time on service change
                     setSelectedTime("");
                   }}
                 >
@@ -108,6 +104,9 @@ const services = [
                   ))}
                 </select>
 
+                <p>{selectedService.description}</p>
+
+                {/* Date */}
                 <label className="modal-label">Select a date</label>
                 <input
                 type="date"
@@ -119,9 +118,10 @@ const services = [
                 }}
                 />
 
+                {/* Time Slots */}
                 {selectedDate && (
                   <>
-                  <label>Select a time</label>
+                  <label className="modal-label">Select a time</label>
                   <div className="time-slots">
                     {timeSlots.map(time => {
                       const booked = isBooked(
@@ -148,6 +148,7 @@ const services = [
                     </>
                 )}
 
+                {/* Confirm */}
                 <button
                 className="booking-btn"
                 disabled={!selectedDate || !selectedTime}
@@ -169,7 +170,11 @@ const services = [
 
                 <button
                 className="modal-close"
-                onClick={() => setBookingOpen(false)}
+                onClick={() => {
+                  setSelectedService(null);
+                  setSelectedDate("");
+                  setSelectedTime("");
+                }}
                 >
                   Close
                 </button>

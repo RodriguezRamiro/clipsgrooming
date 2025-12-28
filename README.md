@@ -287,3 +287,17 @@ Handles mis-clicks naturally
 Makes Profile → Book Now feel intentional
 Scales later (duration-based services, pricing rules)
 You’re already designing like a product builder, not just coding components — that’s a good sign.
+
+upgraded Services.jsx with:
+Service selector inside the modal
+User can change service after opening
+Time resets when service changes
+Fixed bugs (useEffect import, updated typo, classNames)
+No extra props (bookingOpen) needed — simpler mental model
+
+What This Gives You (Important)
+User clicks any service card → modal opens
+User can change service inside modal
+Times auto-update per service
+No page reload
+Clean UX, professional behavior
