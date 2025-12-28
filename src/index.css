@@ -155,24 +155,45 @@ body {
 
 .hero-profile {
   position: absolute;
-  bottom: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid var(--gold);
+  bottom: -90px;
+  left: 6%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   background: var(--dark-gray);
+  padding: 0.75rem 1.25rem;
+  border-radius: 80px;
+  border: 2px solid var(--gold);
   z-index: 10;
-  animation: float 6s ease-in-out infinite;
 }
 
 .hero-profile img {
-  width: 100%;
-  height: 100%;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
   object-fit: cover;
 }
+
+.hero-profile-info {
+  text-align: left;
+}
+
+.hero-profile-info {
+  text-align: left;
+}
+
+.hero-profile-info h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.05rem;
+  color: var(--gold);
+}
+
+.hero-profile-info span {
+  font-size: 0.85rem;
+  color: var(--muted-gray);
+
+}
+
 
 /* Services */
 .services {

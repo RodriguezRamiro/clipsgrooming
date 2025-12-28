@@ -196,3 +196,8 @@ Zero JS
 Zero dependencies
 Investor-ready feel
 exactly how high-end service sites animate.
+
+----------------------------
+testing diffrent profile layout
+human anchor: image + name + role.
+asymetry Off-center = editorial, no floating animation

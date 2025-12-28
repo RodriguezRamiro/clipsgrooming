@@ -25,10 +25,14 @@ funciton Hero() {
             {/* Profile Image */}
             <div className="hero-profile">
                 <img src={profileImg} alt="Zandalio Barber Portrait" />
+
+                <div className="hero-profile-info">
+                    <h4>Zandalio</h4>
+                    <span> Master Barber</span>
+                </div>
             </div>
         </section>
     );
 }
 
 export default Hero;
-
