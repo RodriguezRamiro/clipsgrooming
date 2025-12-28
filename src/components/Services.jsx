@@ -1,6 +1,6 @@
 /* //clipsgrooming/src/components/Services.jsx */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const services = [
     { name: "Line Up", price: "$25", description: "Clean lineup and edges" },
@@ -36,16 +36,22 @@ const services = [
   };
 
 
-  function Services() {
+  function Services( {bookingOpen, setBookingOpen }) {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
     const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
 
+
+    useEffect(() => {
+      if (bookingOpen && !selectedService) {
+        setSelectedService(services[0]);
+      }
+    }, [bookingOpen, selectedService]);
+
     const isBooked = (date, serviceName, time) =>
       bookedSlots[date]?.[serviceName]?.includes(time);
-
 
 
 
@@ -66,6 +72,7 @@ const services = [
                   setSelectedService(service);
                   setSelectedDate("");
                   setSelectedTime("");
+                  setBookingOpen(true);
               }}
             >
                 Book Now
@@ -75,12 +82,31 @@ const services = [
         </div>
 
         {/* Modal placeholder */}
-        {selectedService && (
+        {bookingOpen && selectedService && (
         <div className="modal-backdrop">
             <div className="modal">
                 <h3>{selectedService.name}</h3>
                 <p>{selectedService.description}</p>
                 <p className="price">{selectedService.price}</p>
+
+
+                <label>Service</label>
+                <select
+                  value={selectedService.name}
+                  onChange={(e) => {
+                    const service = services.find(
+                      s => s.name === e.target.value
+                    );
+                    setSelectedService(service);
+                    setSelectedTime("");
+                  }}
+                >
+                  {services.map(service => (
+                    <option key={service.name} value={service.name}>
+                      {service.name} — {service.price}
+                    </option>
+                  ))}
+                </select>
 
                 <label className="modal-label">Select a date</label>
                 <input
@@ -110,7 +136,7 @@ const services = [
                         disabled={booked}
                         className={`time-slot
                         ${booked ? "booked" : ""} ${
-                          selectedTime === time ? "active" : ''
+                          selectedTime === time ? "active" : ""
                         }`}
                         onClick={() => setSelectedTime(time)}
                         >
@@ -126,7 +152,7 @@ const services = [
                 className="booking-btn"
                 disabled={!selectedDate || !selectedTime}
                 onClick={() => {
-                  const updatedBookings = { ...bookedSlots };
+                  const updated = { ...bookedSlots };
 
                   updated[selectedDate] ??= {};
                   updated[selectedDate][selectedService.name] ??=[];
@@ -134,6 +160,7 @@ const services = [
 
                   setBookedSlots(updated);
                   savedBookings(updated);
+                  setBookingOpen(false)
                   setSelectedService(null);
                 }}
                 >
@@ -142,7 +169,7 @@ const services = [
 
                 <button
                 className="modal-close"
-                onClick={() => setSelectedService(null)}
+                onClick={() => setBookingOpen(false)}
                 >
                   Close
                 </button>

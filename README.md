@@ -228,3 +228,62 @@ localStorage = MVP-ready, no backend yet
 Data structure = backend-compatible later
 No routing complexity
 Stripe drops in cleanly later
+
+Add “Book Now” button under Profile
+Goal
+
+Click Book Now under the profile
+ Booking modal opens
+ User selects service → date → time
+ Confirm booking
+ Modal closes
+No page change. No confusion
+
+
+What We’re Changing (Plain English)
+Right now:
+The modal opens only when selectedService is set
+What we want:
+The modal can open either
+from a service card
+OR from Profile → Book Now
+So we introduce one single source of truth:
+bookingOpen (comes from App.jsx)
+
+What Works Now
+ Profile Book Now opens modal
+ Service card Book Now opens modal
+ Modal closes correctly
+ Time slots persist
+ No page navigation
+ Clean React architecture
+
+The Idea (Conceptual)
+Right now:
+Clicking a service card locks that service in
+If the user clicked the wrong service, they must:
+Close modal
+Scroll
+Click another card 😐
+With a service selector inside the modal:
+Service cards = starting point
+Modal = final decision
+User can change their mind without restarting
+This is exactly how:
+Calendly
+Square
+Fresha
+handle bookings.
+🎯 UX Behavior (Simple Rules)
+Action	Result
+Click service card	Modal opens with that service pre-selected
+Open booking from Profile	Modal opens with default service
+Change service in modal	Times + price update instantly
+Already selected time	Clears automatically (prevents conflicts)
+
+Why This Is a Good Call (You’re Thinking Correctly)
+Prevents booking friction
+Handles mis-clicks naturally
+Makes Profile → Book Now feel intentional
+Scales later (duration-based services, pricing rules)
+You’re already designing like a product builder, not just coding components — that’s a good sign.

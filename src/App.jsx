@@ -1,3 +1,5 @@
+
+import { useState } from "react"
 import Navbar from "./components/Navbar";
 import Banner from "./components/Banner";
 import Profile from "./components/Profile";
@@ -5,12 +7,14 @@ import Services from "./components/Services";
 import Footer from "./components/Footer";
 
 function App() {
+  const [bookingOpen, setBookingOpen] = useState(false);
+
   return (
     <>
       <Navbar />
-      <Banner id="home" />
-      <Profile />
-      <Services id="services"/>
+      <Banner />
+      <Profile onBookNow={() => setBookingOpen(true)} />
+      <Services BookingOpen={bookingOpen} setBookingOpen={setBookingOpen} />
       <Footer />
     </>
   );
