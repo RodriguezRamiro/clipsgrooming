@@ -7,14 +7,17 @@ import Services from "./components/Services";
 import Footer from "./components/Footer";
 
 function App() {
-  const [bookingOpen, setBookingOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   return (
     <>
       <Navbar />
-      <Banner />
-      <Profile onBookNow={() => setBookingOpen(true)} />
-      <Services BookingOpen={bookingOpen} setBookingOpen={setBookingOpen} />
+      <Banner id="home" />
+      <Profile onBookNow={() => setSelectedService("open")} />
+      <Services
+      externalOpen={selectedService}
+      clearExternalOpen={() => setSelectedService(null)}
+      />
       <Footer />
     </>
   );

@@ -36,7 +36,7 @@ const services = [
   };
 
 
-  function Services() {
+  function Services({ externalOpen, clearExternalOpen }) {
     const [selectedService, setSelectedService] = useState(null);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
@@ -46,6 +46,12 @@ const services = [
 
     const isBooked = (date, serviceName, time) =>
       bookedSlots[date]?.[serviceName]?.includes(time);
+
+      useEffect(() => {
+        if (externalOpen === "open" && !selectedService) {
+          setSelectedService(services[0]);
+        }
+      }, [externalOpen]);
 
 
 
@@ -174,6 +180,7 @@ const services = [
                   setSelectedService(null);
                   setSelectedDate("");
                   setSelectedTime("");
+                  clearExternalOpen?.();
                 }}
                 >
                   Close
