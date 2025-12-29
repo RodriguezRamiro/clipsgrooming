@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import logoImg from "../assets/barberLogo.png";
 
