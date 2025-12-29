@@ -8,11 +8,31 @@ import Services from "./components/Services";
 import Footer from "./components/Footer";
 
 function App() {
+  const [theme, setTheme] = useState("dark");
   const [selectedService, setSelectedService] = useState(null);
+
+  const toggleTheme = () =>
+  setTheme(theme === "dark" ? "light" : "dark");
+
+  useEffect(() => {
+    documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) setTheme(saved);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+
 
   return (
     <>
-      <Navbar />
+      <Navbar toggleTheme={toggleTheme} />
       <Routes>
         <Route
       path="/"
