@@ -1,6 +1,7 @@
 
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react"
+import { useState, useEffect } from "react";
+
 import Navbar from "./components/Navbar";
 import Banner from "./components/Banner";
 import Profile from "./components/Profile";
@@ -9,23 +10,22 @@ import Footer from "./components/Footer";
 
 function App() {
   const [theme, setTheme] = useState("dark");
-  const [selectedService, setSelectedService] = useState(null);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   const toggleTheme = () =>
   setTheme(theme === "dark" ? "light" : "dark");
 
-  useEffect(() => {
-    documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+  // Load Saved Theme
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved) setTheme(saved);
   }, []);
 
+  //Apply / persist theme
   useEffect(() => {
-    localStorage.setItem("theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
 
@@ -33,22 +33,33 @@ function App() {
   return (
     <>
       <Navbar toggleTheme={toggleTheme} />
+
       <Routes>
         <Route
-      path="/"
-      element={
+          path="/"
+          element={
         <>
-      <Banner id="home" />
-      <Profile onBookNow={() => setSelectedService("open")} />
-      <Services
-      externalOpen={selectedService}
-      clearExternalOpen={() => setSelectedService(null)}
+          <Banner id="home" />
+          <Profile onBookNow={() => setBookingOpen("true")} />
+          <Services
+          bookingOpen={bookingOpen}
+          setBookingOpen={setBookingOpen}
       />
       </>
     }
     />
-    <Route path="services" element={<Services />} />
+
+    <Route
+    path="/services"
+    element={
+    <Services
+      bookingOpen={bookingOpen}
+      setBookingOpen={setBookingOpen}
+      />
+      }
+      />
     <Route path="/about" element={<Profile />} />
+
     {/* Future Routes */}
     </Routes>
 

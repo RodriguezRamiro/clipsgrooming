@@ -439,7 +439,7 @@ body {
 @media (max-width: 768px) {
   .navbar {
     flex-wrap: wrap;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
   }
 
   .logo-text {
@@ -451,12 +451,20 @@ body {
     height: 36px;
   }
 
+  .menu-toggle {
+    display: block;
+  }
+
   .nav-links {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
     font-size: 0.9rem;
+  }
+
+  .nav-links.open {
+    display: flex;
   }
 
   .profile {
@@ -531,17 +539,6 @@ body {
     padding: 1.5rem 1rem;
     font-size: 0.85rem;
   }
-}
-
-
-.menu-toggle {
-  display: none;
-  font-size: 1.6rem;
-  background: none;
-  border: none;
-  color: var(--off-white);
-  cursor: pointer;
-}
 
 .theme-toggle {
   background: none;
@@ -551,10 +548,6 @@ body {
   color: var(--gold);
 }
 
-@media (max-width: 768px) {
-  .menu-toggle {
-    display: block;
-  }
 
   .nav-links {
     display: none;

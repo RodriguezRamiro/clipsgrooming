@@ -13,6 +13,7 @@ function Navbar({ toggleTheme }) {
 
     return (
       <nav className="navbar">
+        <Link to="/" className="logo-wrapper" onClick={closeMenu}>
         <div className="logo-wrapper">
         <img
         src={logoImg}
@@ -22,6 +23,7 @@ function Navbar({ toggleTheme }) {
         <h1 className="logo-text">Zandalio's Grooming
         </h1>
         </div>
+        </Link>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -35,6 +37,7 @@ function Navbar({ toggleTheme }) {
 
       {/* navigation Links */}
         <ul className={`nav-links ${open ? "open" : ""}`}>
+
           <li>
             <Link to="/" onClick={closeMenu}>Home</Link>
           </li>
@@ -51,12 +54,13 @@ function Navbar({ toggleTheme }) {
             <Link to="/contact" onClick={closeMenu}>Contact</Link>
           </li>
 
+
           {/* Theme Toggle */}
           <li>
             <button
             className="theme-toggle"
             onClick={toggleTheme}
-            arial-label="Toggle theme"
+            aria-label="Toggle theme"
             >
              🌙
             </button>
