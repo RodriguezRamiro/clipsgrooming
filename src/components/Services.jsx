@@ -42,6 +42,8 @@ const services = [
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
     const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
+    const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
 
 
     const isBooked = (date, serviceName, time) =>
@@ -72,6 +74,7 @@ const services = [
                   setSelectedService(service);
                   setSelectedDate("");
                   setSelectedTime("");
+                  setBookingConfirmed(false);
               }}
             >
                 Book Now
@@ -152,6 +155,37 @@ const services = [
                     </>
                 )}
 
+              {!bookingConfirmed ? (
+                <>
+                  {/* EXISTING booking form UI */}
+                </>
+              ) : (
+                <>
+                  <h3>Booking Confirmed ✅</h3>
+
+                  <p><strong>Service:</strong> {selectedService.name}</p>
+                  <p><strong>Date:</strong> {selectedDate}</p>
+                  <p><strong>Time:</strong> {selectedTime}</p>
+
+                  <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
+                    We’ll see you then. If you need to reschedule, please contact us.
+                  </p>
+
+                  <button
+                    className="booking-btn"
+                    onClick={() => {
+                      setSelectedService(null);
+                      setSelectedDate("");
+                      setSelectedTime("");
+                      setBookingConfirmed(false);
+                      clearExternalOpen?.();
+                    }}
+                  >
+                    Done
+                  </button>
+                </>
+              )}
+
                 {/* Confirm */}
                 <button
                 className="booking-btn"
@@ -165,8 +199,8 @@ const services = [
 
                   setBookedSlots(updated);
                   savedBookings(updated);
-                  setBookingOpen(false)
-                  setSelectedService(null);
+                  setBookingConfirmed(true);
+
                 }}
                 >
                   Confirm Booking
