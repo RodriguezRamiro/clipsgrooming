@@ -333,3 +333,22 @@ Modal-based booking
 Theme system
 Mobile-safe layout
 Investor-grade architecture
+
+Smooth Mobile Menu Slide Animation (CSS-only)
+Goal
+Instead of the menu “appearing”, it slides down + fades in like a real production site.
+max-height animates vertical opening
+opacity + translateY gives a subtle luxury feel
+No layout shift
+Works on iOS Safari (important)
+Result
+Mobile menu:
+Slides down
+Feels intentional
+No flicker
+No JS hacks
+WIN 2: Theme Toggle Icon That Reflects State (🌙 ⇄ ☀️)
+Result
+Icon always matches theme
+Users instantly understand state
+Micro-interaction adds quality

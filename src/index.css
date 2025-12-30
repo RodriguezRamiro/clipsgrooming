@@ -33,10 +33,14 @@ body {
 /* Navbar */
 .navbar {
   display: flex;
+  position: sticky;
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 2rem;
-  background: var(--dark-gray);
+  background: var(--bg-color);
+  transition: box-shadow 0.25s ease;
+  top: 0;
+  z-index: 1000;
 }
 
 /* Logo */
