@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import logoImg from "../assets/barberLogo.png";
 
 
-function Navbar({ toggleTheme }) {
+function Navbar({ toggleTheme, theme }) {
   const [open, setOpen] = useState(false);
 
   const closeMenu = () => setOpen(false);
@@ -62,7 +62,7 @@ function Navbar({ toggleTheme }) {
             onClick={toggleTheme}
             aria-label="Toggle theme"
             >
-             🌙
+              {theme === "dark" ? "☀️" : "🌙"}
             </button>
           </li>
         </ul>

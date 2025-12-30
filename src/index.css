@@ -92,8 +92,12 @@ body {
   font-size: 1.2rem;
   cursor: pointer;
   color: var(--gold);
+  transition: transform 0.2s ease;
 }
 
+.theme-toggle:hover {
+  transform: scale(1.15);
+}
 
 
 /* Banner */
@@ -456,15 +460,28 @@ body {
   }
 
   .nav-links {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    font-size: 0.9rem;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    text-align: center;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+
+    transition:
+      max-height 0.35s ease,
+      opacity 0.25s ease,
+      transform 0.25s ease;
   }
 
   .nav-links.open {
-    display: flex;
+    max-height: 300px;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .profile {
@@ -546,6 +563,7 @@ body {
   font-size: 1.2rem;
   cursor: pointer;
   color: var(--gold);
+  transition: transform 0.2s ease;
 }
 
 

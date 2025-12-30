@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <Navbar toggleTheme={toggleTheme} />
+      <Navbar toggleTheme={toggleTheme} theme={theme} />
 
       <Routes>
         <Route

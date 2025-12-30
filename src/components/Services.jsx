@@ -110,8 +110,6 @@ const services = [
                   ))}
                 </select>
 
-                <p>{selectedService.description}</p>
-
                 {/* Date */}
                 <label className="modal-label">Select a date</label>
                 <input
