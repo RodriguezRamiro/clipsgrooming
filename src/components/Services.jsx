@@ -44,6 +44,13 @@ const services = [
     const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
     const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
+    // Client State
+    const [clientInfo, setClientInfo] = useState({
+      name: "",
+      phone: "",
+      notes: ""
+    });
+
 
 
     const isBooked = (date, serviceName, time) =>
@@ -155,13 +162,52 @@ const services = [
                     </>
                 )}
 
+                {/* Client Info */}
+                {selectedDate && selectedTime && !bookingConfirmed && (
+                  <div className="client-form">
+                    <label>Full Name</label>
+                    <input
+                    type="text"
+                    placeholder="John Doe"
+                    value={clientInfo.name}
+                    onChange={(e) =>
+                    setClientInfo({ ...clientInfo, name: e.target.value})
+                  }
+                  />
+
+                  <labbel>Pnoe Number</labbel>
+                  <input
+                  type="tel"
+                  placeholder="(555) 123-4567"
+                  value={clientInfo.phone}
+                  onChange={(e) =>
+                  setClientInfo({ ...clientInfo, phone: e.target.value })
+                }
+                />
+
+                <label>Notes (optional)</label>
+                <textarea
+                  placeholder="Special requests?"
+                  value={clientInfo.notes}
+                  onChange={(e) =>
+                  setClientInfo({ ...clientInfo, notes: e.target.value})
+                }
+                />
+                </div>
+                )}
+
                 {!bookingConfirmed ? (
                   <>
                     {/* booking UI */}
 
                     <button
                       className="booking-btn"
-                      disabled={!selectedDate || !selectedTime}
+                      disabled={
+                        !selectedDate ||
+                        !selectedTime ||
+                        !clientInfo.name ||
+                        !clientInfo.phone
+                      }
                       onClick={() => {
                         const updated = { ...bookedSlots };
 
@@ -184,6 +230,9 @@ const services = [
                     <p><strong>Service:</strong> {selectedService.name}</p>
                     <p><strong>Date:</strong> {selectedDate}</p>
                     <p><strong>Time:</strong> {selectedTime}</p>
+                    <p><strong>Name:</strong> {clientInfo.name}</p>
+                    <p><strong>Phone:</strong> {clientInfo.phone}</p>
+
 
                     <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
                       We’ll see you then. If you need to reschedule, please contact us.
@@ -195,6 +244,7 @@ const services = [
                         setSelectedService(null);
                         setSelectedDate("");
                         setSelectedTime("");
+                        setClientInfo({name: "", phone: "", notes: ""});
                         setBookingConfirmed(false);
                         clearExternalOpen?.();
                       }}
@@ -211,6 +261,7 @@ const services = [
                   setSelectedService(null);
                   setSelectedDate("");
                   setSelectedTime("");
+                  setClientInfo({name: "", phone: "", notes: ""});
                   clearExternalOpen?.();
                 }}
                 >

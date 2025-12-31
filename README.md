@@ -352,3 +352,16 @@ Result
 Icon always matches theme
 Users instantly understand state
 Micro-interaction adds quality
+
+Add client infocapture
+Decide what client info to capture (minimal v1):
+Full Name (required)
+Phone Number (required)
+Optional Note (optional)
+Single object = easier to save later
+Easy to reset
+Easy to send to backend later
+Only shows after time is chosen
+Doesn’t clutter the modal early
+Keeps the user focused
+Booking cannot happen without name + phone
