@@ -155,56 +155,55 @@ const services = [
                     </>
                 )}
 
-              {!bookingConfirmed ? (
-                <>
-                  {/* EXISTING booking form UI */}
-                </>
-              ) : (
-                <>
-                  <h3>Booking Confirmed ✅</h3>
+                {!bookingConfirmed ? (
+                  <>
+                    {/* booking UI */}
 
-                  <p><strong>Service:</strong> {selectedService.name}</p>
-                  <p><strong>Date:</strong> {selectedDate}</p>
-                  <p><strong>Time:</strong> {selectedTime}</p>
+                    <button
+                      className="booking-btn"
+                      disabled={!selectedDate || !selectedTime}
+                      onClick={() => {
+                        const updated = { ...bookedSlots };
 
-                  <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
-                    We’ll see you then. If you need to reschedule, please contact us.
-                  </p>
+                        updated[selectedDate] ??= {};
+                        updated[selectedDate][selectedService.name] ??= [];
+                        updated[selectedDate][selectedService.name].push(selectedTime);
 
-                  <button
-                    className="booking-btn"
-                    onClick={() => {
-                      setSelectedService(null);
-                      setSelectedDate("");
-                      setSelectedTime("");
-                      setBookingConfirmed(false);
-                      clearExternalOpen?.();
-                    }}
-                  >
-                    Done
-                  </button>
-                </>
-              )}
+                        setBookedSlots(updated);
+                        savedBookings(updated);
+                        setBookingConfirmed(true);
+                      }}
+                    >
+                      Confirm Booking
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <h3>Booking Confirmed ✅</h3>
 
-                {/* Confirm */}
-                <button
-                className="booking-btn"
-                disabled={!selectedDate || !selectedTime}
-                onClick={() => {
-                  const updated = { ...bookedSlots };
+                    <p><strong>Service:</strong> {selectedService.name}</p>
+                    <p><strong>Date:</strong> {selectedDate}</p>
+                    <p><strong>Time:</strong> {selectedTime}</p>
 
-                  updated[selectedDate] ??= {};
-                  updated[selectedDate][selectedService.name] ??=[];
-                  updated[selectedDate][selectedService.name].push(selectedTime);
+                    <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
+                      We’ll see you then. If you need to reschedule, please contact us.
+                    </p>
 
-                  setBookedSlots(updated);
-                  savedBookings(updated);
-                  setBookingConfirmed(true);
+                    <button
+                      className="booking-btn"
+                      onClick={() => {
+                        setSelectedService(null);
+                        setSelectedDate("");
+                        setSelectedTime("");
+                        setBookingConfirmed(false);
+                        clearExternalOpen?.();
+                      }}
+                    >
+                      Done
+                    </button>
+                  </>
+                )}
 
-                }}
-                >
-                  Confirm Booking
-                </button>
 
                 <button
                 className="modal-close"
