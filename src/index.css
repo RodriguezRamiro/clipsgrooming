@@ -352,7 +352,7 @@ body {
 
 .modal {
   background: var(--dark-gray);
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 12px;
   width: 90%;
   max-width: 400px;
@@ -362,16 +362,65 @@ body {
 .modal h3 {
   font-family: "Montserrat", sans-serif;
   color: var(--gold);
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
 }
 
 .modal-close {
-  margin-top: 1rem;
+  margin-top: .5rem;
   background: transparent;
   border: none;
   color: var(--muted-gray);
   cursor: pointer;
 }
+
+/* Modal form styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal select,
+.modal input,
+.modal textarea {
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #ccc);
+  background: var(--input-bg, #fff);
+  font-size: 0.9rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.modal select:focus,
+.modal input:focus,
+.modal textarea:focus {
+  outline: none;
+  border-color: var(--accent, #111);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+}
+
+.modal select,
+.modal input[type="date"] {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='black' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 14px;
+}
+
+.form-error {
+  color: #b00020;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+
 
 /* Buttons */
 .booking-btn {

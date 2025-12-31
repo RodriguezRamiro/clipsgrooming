@@ -365,3 +365,13 @@ Only shows after time is chosen
 Doesn’t clutter the modal early
 Keeps the user focused
 Booking cannot happen without name + phone
+
+Goal of this step (ONLY)
+Store one booking object that includes:
+service
+date
+time
+client info
+status
+id (for reschedule/cancel later)
+No UI changes yet. No backend yet.

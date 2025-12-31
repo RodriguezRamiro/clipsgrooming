@@ -28,10 +28,13 @@ const services = [
 
   const loadBookings = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
+    const parsed = stored ? JSON.parse(stored) : [];
+
+    // If old object-based data exists, reset safely
+    return Array.isArray(parsed) ? parsed : [];
   };
 
-  const savedBookings = (bookings) => {
+  const saveBookings = (bookings) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
   };
 
@@ -41,28 +44,31 @@ const services = [
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
-    const [bookedSlots, setBookedSlots] = useState(() => loadBookings());
+    const [bookings, setBookings] = useState(() => loadBookings());
     const [bookingConfirmed, setBookingConfirmed] = useState(false);
-
     // Client State
     const [clientInfo, setClientInfo] = useState({
       name: "",
       phone: "",
       notes: ""
     });
-
-
+    // Error State
+    const [formError, setFormError] = useState("");
 
     const isBooked = (date, serviceName, time) =>
-      bookedSlots[date]?.[serviceName]?.includes(time);
+      bookings.some(
+        b =>
+        b.date === date &&
+        b.service === serviceName &&
+        b.time === time &&
+        b.status === "booked"
+      );
 
       useEffect(() => {
         if (externalOpen === "open" && !selectedService) {
           setSelectedService(services[0]);
         }
-      }, [externalOpen]);
-
-
+      }, [externalOpen, selectedService]);
 
     return (
       <section className="services">
@@ -101,6 +107,7 @@ const services = [
                 <h3>Book Appointment</h3>
 
                 {/*Service Selector */}
+                <div className="form-group">
                 <label>Service</label>
                 <select
                   value={selectedService.name}
@@ -119,11 +126,14 @@ const services = [
                     </option>
                   ))}
                 </select>
+                </div>
 
                 {/* Date */}
+                <div className="form-group">
                 <label className="modal-label">Select a date</label>
                 <input
                 type="date"
+                min={new Date().toISOString().split("T")[0]}
                 value={selectedDate}
                 className="date-input"
                 onChange={e => {
@@ -131,6 +141,7 @@ const services = [
                   setSelectedTime("");
                 }}
                 />
+                </div>
 
                 {/* Time Slots */}
                 {selectedDate && (
@@ -164,27 +175,34 @@ const services = [
 
                 {/* Client Info */}
                 {selectedDate && selectedTime && !bookingConfirmed && (
+                  <>
                   <div className="client-form">
                     <label>Full Name</label>
                     <input
                     type="text"
                     placeholder="John Doe"
                     value={clientInfo.name}
-                    onChange={(e) =>
+                    onChange={(e) => {
                     setClientInfo({ ...clientInfo, name: e.target.value})
-                  }
+                    setFormError("");
+                  }}
                   />
+                  </div>
 
-                  <labbel>Pnoe Number</labbel>
+                  <div className="form-group">
+                  <label>Phone Number</label>
                   <input
                   type="tel"
                   placeholder="(555) 123-4567"
                   value={clientInfo.phone}
-                  onChange={(e) =>
-                  setClientInfo({ ...clientInfo, phone: e.target.value })
-                }
+                  onChange={(e) => {
+                  setClientInfo({ ...clientInfo, phone: e.target.value });
+                  setFormError("");
+                }}
                 />
+                </div>
 
+                <div className="form-group">
                 <label>Notes (optional)</label>
                 <textarea
                   placeholder="Special requests?"
@@ -194,36 +212,49 @@ const services = [
                 }
                 />
                 </div>
-                )}
 
-                {!bookingConfirmed ? (
-                  <>
                     {/* booking UI */}
-
+                    {formError && (
+                      <p className="form-error">
+                        {formError}
+                      </p>
+                    )}
                     <button
                       className="booking-btn"
                       disabled={
-                        !selectedDate ||
-                        !selectedTime ||
                         !clientInfo.name ||
-                        !clientInfo.phone
-                      }
-                      onClick={() => {
-                        const updated = { ...bookedSlots };
+                        !clientInfo.phone }
+                        onClick={() => {
+                          if (!clientInfo.name || !clientInfo.phone) {
+                            setFormError("Please Enter Your name and phone number to continue.");
+                            return;
+                          }
 
-                        updated[selectedDate] ??= {};
-                        updated[selectedDate][selectedService.name] ??= [];
-                        updated[selectedDate][selectedService.name].push(selectedTime);
+                          setFormError("");
 
-                        setBookedSlots(updated);
-                        savedBookings(updated);
+                        const newBooking = {
+                          id: crypto.randomUUID(),
+                          service: selectedService.name,
+                          price: selectedService.price,
+                          date: selectedDate,
+                          time: selectedTime,
+                          client: { ...clientInfo },
+                          status: "booked",
+                          createdAt: Date.now()
+                        };
+
+                        const updated = [...bookings, newBooking];
+                        setBookings(updated);
+                        saveBookings(updated);
                         setBookingConfirmed(true);
                       }}
                     >
                       Confirm Booking
                     </button>
                   </>
-                ) : (
+                )}
+
+                  {bookingConfirmed && (
                   <>
                     <h3>Booking Confirmed ✅</h3>
 
