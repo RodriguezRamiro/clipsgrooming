@@ -375,3 +375,9 @@ client info
 status
 id (for reschedule/cancel later)
 No UI changes yet. No backend yet.
+
+now:
+Stabilized state shape (array-based bookings)
+Prevented invalid bookings
+Improved visual hierarchy inside the modal
+Laid groundwork for backend integration later

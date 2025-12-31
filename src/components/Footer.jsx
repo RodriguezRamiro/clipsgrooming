@@ -6,7 +6,7 @@ function Footer() {
         <h3 className="footer-logo">RodriguezTech Studios™</h3>
 
         <p>
-          RodriguezTech® All rights reserved {year}
+          RamTech® All rights reserved {year}
         </p>
 
         <p>
