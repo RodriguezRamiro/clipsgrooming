@@ -266,11 +266,21 @@ const services = [
 
 
                     <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
-                      We’ll see you then. If you need to reschedule, please contact us.
+                    Your appointment is reserved. You can pay now to secure your spot or complete payment in person.
                     </p>
+                    <div className="confirmation-actions">
+                      <button
+                      className="booking-btn"
+                      onClick={() => {
+                        // later -> redirect to /checkout
+                        console.log("Proceed to payment");
+                      }}
+                      >
+                        Pay Now
+                      </button>
 
                     <button
-                      className="booking-btn"
+                      className="secondary-btn"
                       onClick={() => {
                         setSelectedService(null);
                         setSelectedDate("");
@@ -280,8 +290,9 @@ const services = [
                         clearExternalOpen?.();
                       }}
                     >
-                      Done
+                      Reserve Only
                     </button>
+                    </div>
                   </>
                 )}
 
