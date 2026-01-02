@@ -1,3 +1,4 @@
+/* //clipsgrooming/src/App.jsx */
 
 import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -6,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Banner from "./components/Banner";
 import Profile from "./components/Profile";
 import Services from "./components/Services";
+import Checkout from "./components/Checkout";
 import Footer from "./components/Footer";
 
 function App() {
@@ -35,30 +37,32 @@ function App() {
       <Navbar toggleTheme={toggleTheme} theme={theme} />
 
       <Routes>
-        <Route
-          path="/"
-          element={
-        <>
-          <Banner id="home" />
-          <Profile onBookNow={() => setBookingOpen("true")} />
-          <Services
+  <Route
+    path="/"
+    element={
+      <>
+        <Banner id="home" />
+        <Profile onBookNow={() => setBookingOpen("true")} />
+        <Services
           bookingOpen={bookingOpen}
           setBookingOpen={setBookingOpen}
-      />
+        />
       </>
     }
-    />
+  />
 
-    <Route
+  <Route
     path="/services"
     element={
-    <Services
-      bookingOpen={bookingOpen}
-      setBookingOpen={setBookingOpen}
+      <Services
+        bookingOpen={bookingOpen}
+        setBookingOpen={setBookingOpen}
       />
-      }
-      />
-    <Route path="/about" element={<Profile />} />
+    }
+  />
+
+  <Route path="/checkout" element={<Checkout />} />
+  <Route path="/about" element={<Profile />} />
 
     {/* Future Routes */}
     </Routes>

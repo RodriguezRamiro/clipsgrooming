@@ -270,9 +270,19 @@ const services = [
                     </p>
                     <div className="confirmation-actions">
                       <button
-                      className="booking-btn"
+                      className="paynow-btn"
                       onClick={() => {
                         // later -> redirect to /checkout
+                        Navigate("/checkout", {
+                          state: {
+                            bookingId,
+                            serviceName,
+                            price,
+                            date,
+                            time,
+                            clientName
+                          }
+                        });
                         console.log("Proceed to payment");
                       }}
                       >
@@ -280,7 +290,7 @@ const services = [
                       </button>
 
                     <button
-                      className="secondary-btn"
+                      className="reserved-btn"
                       onClick={() => {
                         setSelectedService(null);
                         setSelectedDate("");
@@ -296,7 +306,7 @@ const services = [
                   </>
                 )}
 
-
+              {/* keep comented out for now seems redundant flow.
                 <button
                 className="modal-close"
                 onClick={() => {
@@ -309,6 +319,8 @@ const services = [
                 >
                   Close
                 </button>
+
+                */}
               </div>
             </div>
         )}

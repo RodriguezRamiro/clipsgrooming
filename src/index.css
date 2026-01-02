@@ -423,10 +423,13 @@ body {
 
 
 /* Buttons */
-.booking-btn {
+
+.booking-btn,
+.paynow-btn,
+.reserved-btn{
   display: block;
-  margin: 3rem auto 0;
-  padding: 0.9rem 2rem;
+  margin: 0.5rem auto 0;
+  padding: 0.5rem 4rem;
   font-size: 1.05rem;
   background: var(--gold);
   color: var(--black);
@@ -435,8 +438,10 @@ body {
   cursor: pointer;
 }
 
-.booking-btn:hover {
-  opacity: 0.9;
+.booking-btn,
+.paynow-btn,
+.reserved-btn:hover {
+  opacity: .9;
 }
 
 

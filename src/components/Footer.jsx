@@ -3,11 +3,9 @@ function Footer() {
 
     return (
       <footer className="footer" aria-label="Footer">
-        <h3 className="footer-logo">RodriguezTech Studios™</h3>
+        <h3 className="footer-logo">RodriguezTech Studios</h3>
 
-        <p>
-          RamTech® All rights reserved {year}
-        </p>
+        <p>© RamTech LLC. All rights reserved {year} </p>
 
         <p>
           <small>
