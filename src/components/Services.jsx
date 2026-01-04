@@ -1,6 +1,8 @@
 /* //clipsgrooming/src/components/Services.jsx */
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const services = [
     { name: "Line Up", price: "$25", description: "Clean lineup and edges" },
@@ -52,6 +54,8 @@ const services = [
       phone: "",
       notes: ""
     });
+
+    const navigate = useNavigate();
     // Error State
     const [formError, setFormError] = useState("");
 
@@ -246,9 +250,22 @@ const services = [
                         const updated = [...bookings, newBooking];
                         setBookings(updated);
                         saveBookings(updated);
-                        setBookingConfirmed(true);
+
+                        // Close modal + reset ui
+                        setSelectedService(null);
+                        setSelectedDate("");
+                        setSelectedTime("");
+                        setClientInfo({ name: "", phone: "", notes: "" });
+                        setBookingConfirmed(false);
+                        clearExternalOpen?.();
+
+                      // Navigate to check out with booking data
+                      navigate("/checkout", {
+                        state: { booking: newBooking }
+                      });
                       }}
                     >
+
                       Confirm Booking
                     </button>
                   </>
@@ -273,7 +290,7 @@ const services = [
                       className="paynow-btn"
                       onClick={() => {
                         // later -> redirect to /checkout
-                        Navigate("/checkout", {
+                        navigate("/checkout", {
                           state: {
                             bookingId,
                             serviceName,
