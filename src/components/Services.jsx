@@ -47,7 +47,6 @@ const services = [
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
     const [bookings, setBookings] = useState(() => loadBookings());
-    const [bookingConfirmed, setBookingConfirmed] = useState(false);
     // Client State
     const [clientInfo, setClientInfo] = useState({
       name: "",
@@ -59,13 +58,12 @@ const services = [
     // Error State
     const [formError, setFormError] = useState("");
 
-    const isBooked = (date, serviceName, time) =>
+    const isBooked = (date, time) =>
       bookings.some(
         b =>
         b.date === date &&
-        b.service === serviceName &&
         b.time === time &&
-        b.status === "booked"
+        (b.status === "reserved" || bstatus === "paid")
       );
 
       useEffect(() => {
@@ -91,7 +89,7 @@ const services = [
                   setSelectedService(service);
                   setSelectedDate("");
                   setSelectedTime("");
-                  setBookingConfirmed(false);
+
               }}
             >
                 Book Now
@@ -104,11 +102,13 @@ const services = [
         {selectedService && (
         <div className="modal-backdrop">
             <div className="modal">
-                <h3>{selectedService.name}</h3>
-                <p>{selectedService.description}</p>
-                <p className="price">{selectedService.price}</p>
+
 
                 <h3>Book Appointment</h3>
+                <p className="service-name">
+                  {selectedService.name} — {selectedService.price}
+                </p>
+
 
                 {/*Service Selector */}
                 <div className="form-group">
@@ -155,7 +155,6 @@ const services = [
                     {timeSlots.map(time => {
                       const booked = isBooked(
                         selectedDate,
-                        selectedService.name,
                         time
                       );
 
@@ -178,7 +177,7 @@ const services = [
                 )}
 
                 {/* Client Info */}
-                {selectedDate && selectedTime && !bookingConfirmed && (
+                {selectedDate && selectedTime && (
                   <>
                   <div className="client-form">
                     <label>Full Name</label>
@@ -230,7 +229,7 @@ const services = [
                         !clientInfo.phone }
                         onClick={() => {
                           if (!clientInfo.name || !clientInfo.phone) {
-                            setFormError("Please Enter Your name and phone number to continue.");
+                            setFormError("Please Enter your name and phone number to continue.");
                             return;
                           }
 
@@ -243,7 +242,7 @@ const services = [
                           date: selectedDate,
                           time: selectedTime,
                           client: { ...clientInfo },
-                          status: "booked",
+                          status: "reserved",
                           createdAt: Date.now()
                         };
 
@@ -251,12 +250,11 @@ const services = [
                         setBookings(updated);
                         saveBookings(updated);
 
-                        // Close modal + reset ui
+                        // Close modal + reset
                         setSelectedService(null);
                         setSelectedDate("");
                         setSelectedTime("");
                         setClientInfo({ name: "", phone: "", notes: "" });
-                        setBookingConfirmed(false);
                         clearExternalOpen?.();
 
                       // Navigate to check out with booking data
@@ -270,74 +268,6 @@ const services = [
                     </button>
                   </>
                 )}
-
-                  {bookingConfirmed && (
-                  <>
-                    <h3>Booking Confirmed ✅</h3>
-
-                    <p><strong>Service:</strong> {selectedService.name}</p>
-                    <p><strong>Date:</strong> {selectedDate}</p>
-                    <p><strong>Time:</strong> {selectedTime}</p>
-                    <p><strong>Name:</strong> {clientInfo.name}</p>
-                    <p><strong>Phone:</strong> {clientInfo.phone}</p>
-
-
-                    <p style={{ marginTop: "1rem", color: "var(--muted-gray)" }}>
-                    Your appointment is reserved. You can pay now to secure your spot or complete payment in person.
-                    </p>
-                    <div className="confirmation-actions">
-                      <button
-                      className="paynow-btn"
-                      onClick={() => {
-                        // later -> redirect to /checkout
-                        navigate("/checkout", {
-                          state: {
-                            bookingId,
-                            serviceName,
-                            price,
-                            date,
-                            time,
-                            clientName
-                          }
-                        });
-                        console.log("Proceed to payment");
-                      }}
-                      >
-                        Pay Now
-                      </button>
-
-                    <button
-                      className="reserved-btn"
-                      onClick={() => {
-                        setSelectedService(null);
-                        setSelectedDate("");
-                        setSelectedTime("");
-                        setClientInfo({name: "", phone: "", notes: ""});
-                        setBookingConfirmed(false);
-                        clearExternalOpen?.();
-                      }}
-                    >
-                      Reserve Only
-                    </button>
-                    </div>
-                  </>
-                )}
-
-              {/* keep comented out for now seems redundant flow.
-                <button
-                className="modal-close"
-                onClick={() => {
-                  setSelectedService(null);
-                  setSelectedDate("");
-                  setSelectedTime("");
-                  setClientInfo({name: "", phone: "", notes: ""});
-                  clearExternalOpen?.();
-                }}
-                >
-                  Close
-                </button>
-
-                */}
               </div>
             </div>
         )}

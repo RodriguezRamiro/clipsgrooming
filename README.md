@@ -389,3 +389,11 @@ Laid groundwork for backend integration later
 - Added clear post-confirmation messaging for payment options
 - Introduced “Pay Now” and “Reserve Only” actions to reduce friction
 - Booking flow now separates reservation from payment for flexibility
+
+### Summary (checkpoint)
+Bug identified correctly by you
+Root cause fixed cleanly
+No architectural rewrites
+Checkout flow intact
+Backend-ready
+

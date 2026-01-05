@@ -2,12 +2,26 @@
 
 import { useLocation, useNavigate } from "react-router-dom";
 
+
+const STORAGE_KEY = "clipsgrooming_bookings";
+
+
+
 function Checkout() {
     const navigate = useNavigate();
-    const { state } = useLocation();
+    const location = useLocation()
+    const { state } = location;
+
+    let booking = state?.booking;
+
+    if (!booking) {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        booking = stored[stored.length -1];
+    }
+
 
     // If someone hits /check out directly
-    if (!state?.booking) {
+    if (!booking) {
         return (
             <div className="checkout">
                 <h2>No booking found</h2>
@@ -18,7 +32,6 @@ function Checkout() {
         );
     }
 
-    const { booking } = state;
 
     return (
         <section className="checkout">
@@ -26,14 +39,22 @@ function Checkout() {
 
             <div className="checkout-card">
                 <p><strong>Service:</strong> {booking.service}</p>
-                <p><strong>Date:</strong> {booking.date}</p>
+                <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
                 <p><strong>Time:</strong> {booking.time}</p>
                 <p><strong>Name:</strong> {booking.client.name}</p>
                 <p><strong>Phone:</strong> {booking.client.phone}</p>
                 <p><strong>Price:</strong> {booking.price}</p>
 
-                <p className="checkout-status">
-                    Status: <strong>{booking.status === "paid" ? "Paid" : "Reserved"}</strong>
+                <p className={`checkout-status" ${booking.status}`}>
+                {booking.status === "paid" ? (
+                    <strong> Payment complete. Seeyou Soon!</strong>
+                ) : (
+                    <>
+                <strong>Reservation confirmed.</strong>
+                <br />
+                Payment may be completed in person.
+                </>
+                )}
                 </p>
             </div>
 
@@ -42,11 +63,15 @@ function Checkout() {
                     Pay Now (Coming Soon)
                 </button>
 
+
+
                 <button
-                className="modal-close"
-                onClick={() => navigate("/")}
+                className="reserved-btn"
+                onClick={() => {
+                    navigate("/", { replace: true });
+                }}
                 >
-                    Finish
+                    Reserve Only
                 </button>
             </div>
 
