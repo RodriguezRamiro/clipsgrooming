@@ -397,3 +397,20 @@ No architectural rewrites
 Checkout flow intact
 Backend-ready
 
+### Goal for Checkout (clear scope)
+Persist the booking even if the page refreshes
+Differentiate reserved vs paid
+Prepare Checkout for real payment later (Stripe-ready)
+UI already supports:
+reserved
+paid
+Prevents accidental back-navigation
+Feels intentional and complete
+
+Final Behavior Check (important)
+
+Booking survives refresh
+Checkout always shows latest booking
+Time slot remains locked
+Ready for Stripe / Square later
+No backend required yet

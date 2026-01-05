@@ -27,7 +27,20 @@ const services = [
   ];
 
   const STORAGE_KEY = "clipsgrooming_bookings";
+  const ACTIVE_BOOKING_KEY = "clipsgrooming_active_bookings";
 
+
+  // Lock the flow if a booking already exists
+  useEffect(() => {
+    const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
+    if (activeId) {
+      const existing = bookings.find(b => b.id === activeId);
+      if (existing) {
+        navigate("/checkout", {state: { booking: existing }});
+
+      }
+    }
+  }, []);
   const loadBookings = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
@@ -63,7 +76,7 @@ const services = [
         b =>
         b.date === date &&
         b.time === time &&
-        (b.status === "reserved" || bstatus === "paid")
+        (b.status === "reserved" || b.status === "paid")
       );
 
       useEffect(() => {
@@ -249,6 +262,8 @@ const services = [
                         const updated = [...bookings, newBooking];
                         setBookings(updated);
                         saveBookings(updated);
+                        localStorage.setItem(ACTIVE_BOOKING_KEY, newBooking.id);
+
 
                         // Close modal + reset
                         setSelectedService(null);

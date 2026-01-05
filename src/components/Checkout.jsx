@@ -68,6 +68,7 @@ function Checkout() {
                 <button
                 className="reserved-btn"
                 onClick={() => {
+                    localStorage.removeItem(ACTIVE_BOOKING_KEY);
                     navigate("/", { replace: true });
                 }}
                 >
