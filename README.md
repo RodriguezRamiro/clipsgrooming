@@ -422,8 +422,7 @@ Barber admin daily schedule
 Disable fully booked days
 Confirmation SMS / email hook
 
-Step 2
-When a booking moves from reserved → paid:
+### When a booking moves from reserved → paid:
 The booking status updates to "paid"
 The change persists in localStorage
 The active reservation is cleared
@@ -434,3 +433,11 @@ Clean reservation → paid transition
 Persistence
 Safe guards
 Stripe-ready architecture
+
+### Global Time-Slot Locking (Service-Independent)
+🎯 The Problem (Restated Precisely)
+Right now:
+Time slots are scoped per service
+Switching services frees the same time slot
+This allows double-booking the same barber/time/day
+If a date + time is booked, it is unavailable across ALL services
