@@ -1,9 +1,8 @@
 /* //clipsgrooming/src/components/Checkout.jsx */
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
 
-
-const STORAGE_KEY = "clipsgrooming_bookings";
 
 
 
@@ -45,7 +44,7 @@ function Checkout() {
                 <p><strong>Phone:</strong> {booking.client.phone}</p>
                 <p><strong>Price:</strong> {booking.price}</p>
 
-                <p className={`checkout-status" ${booking.status}`}>
+                <p className={`checkout-status ${booking.status}`}>
                 {booking.status === "paid" ? (
                     <strong> Payment complete. Seeyou Soon!</strong>
                 ) : (

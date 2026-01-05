@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
+
 
 
 const services = [
@@ -26,21 +28,7 @@ const services = [
     "2:30 PM"
   ];
 
-  const STORAGE_KEY = "clipsgrooming_bookings";
-  const ACTIVE_BOOKING_KEY = "clipsgrooming_active_bookings";
 
-
-  // Lock the flow if a booking already exists
-  useEffect(() => {
-    const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
-    if (activeId) {
-      const existing = bookings.find(b => b.id === activeId);
-      if (existing) {
-        navigate("/checkout", {state: { booking: existing }});
-
-      }
-    }
-  }, []);
   const loadBookings = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const parsed = stored ? JSON.parse(stored) : [];
@@ -70,6 +58,20 @@ const services = [
     const navigate = useNavigate();
     // Error State
     const [formError, setFormError] = useState("");
+
+    useEffect(() => {
+      const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
+      if (!activeId) return;
+
+      const existing = bookings.find(b => b.id === activeId);
+      if (existing) {
+        navigate("/checkout", {
+          state: { booking: existing },
+          replace: true
+        });
+      }
+    }, [bookings, navigate]);
+
 
     const isBooked = (date, time) =>
       bookings.some(
