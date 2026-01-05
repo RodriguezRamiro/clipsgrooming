@@ -414,3 +414,23 @@ Checkout always shows latest booking
 Time slot remains locked
 Ready for Stripe / Square later
 No backend required yet
+
+###  New upgrades
+Auto-expire reservations after X minutes
+Stripe → set status: "paid"
+Barber admin daily schedule
+Disable fully booked days
+Confirmation SMS / email hook
+
+Step 2
+When a booking moves from reserved → paid:
+The booking status updates to "paid"
+The change persists in localStorage
+The active reservation is cleared
+The UI reflects the paid state correctly
+(Future-proof) This logic works later with Stripe / real payments
+Step 2 Complete
+Clean reservation → paid transition
+Persistence
+Safe guards
+Stripe-ready architecture

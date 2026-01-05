@@ -427,6 +427,13 @@ body {
 }
 
 
+.expiration-warning {
+  color: #d97706;
+  font-size: 0.9rem;
+}
+
+
+
 
 /* Buttons */
 

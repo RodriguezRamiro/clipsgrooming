@@ -28,6 +28,8 @@ const services = [
     "2:30 PM"
   ];
 
+  const EXPIRATION_MINUTES = 30;
+
 
   const loadBookings = () => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -71,6 +73,21 @@ const services = [
         });
       }
     }, [bookings, navigate]);
+
+    useEffect(() => {
+      const now = Date.now();
+      const updated = bookings.map(b => {
+        if (b.status === "reserved" && b.expiresAt < now) {
+          return { ...b, status: "expired" };
+        }
+        return b;
+      });
+
+      if (JSON.stringify(updated)  !== JSON.stringify(bookings)) {
+        setBookings(updated);
+        saveBookings(updated);
+      }
+    }, []);
 
 
     const isBooked = (date, time) =>
@@ -258,7 +275,8 @@ const services = [
                           time: selectedTime,
                           client: { ...clientInfo },
                           status: "reserved",
-                          createdAt: Date.now()
+                          createdAt: Date.now(),
+                          expiresAt: Date.now() + EXPIRATION_MINUTES * 60 * 1000
                         };
 
                         const updated = [...bookings, newBooking];
