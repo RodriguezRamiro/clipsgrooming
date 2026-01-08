@@ -89,6 +89,23 @@ const services = [
       }
     }, []);
 
+    // availability check helper function
+    const getUnavailableSlots = (date) => {
+      const blocked = bookings
+      .filter(
+        b =>
+        b.date === date &&
+        (b.status === "reserved" || b.status === "paid")
+      )
+      .map(b => b.time);
+
+      const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
+      if (active?.date === date) {
+        blocked.push(active.time);
+      }
+    }
+    return new Set(blocked);
+  };
 
     const isBooked = (date, time) =>
       bookings.some(
