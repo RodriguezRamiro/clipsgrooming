@@ -45,11 +45,15 @@ const services = [
 
 
   function Services({ externalOpen, clearExternalOpen }) {
+    const navigate = useNavigate();
+
     const [selectedService, setSelectedService] = useState(null);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
-    const [bookings, setBookings] = useState(() => loadBookings());
+    const [bookings, setBookings] = useState(loadBookings);
+    const [formError, setFormError = useState("");
+
     // Client State
     const [clientInfo, setClientInfo] = useState({
       name: "",
@@ -57,10 +61,7 @@ const services = [
       notes: ""
     });
 
-    const navigate = useNavigate();
-    // Error State
-    const [formError, setFormError] = useState("");
-
+    // Redirect if active booking exists
     useEffect(() => {
       const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
       if (!activeId) return;
@@ -74,14 +75,14 @@ const services = [
       }
     }, [bookings, navigate]);
 
+    // Expire old reservations
     useEffect(() => {
       const now = Date.now();
-      const updated = bookings.map(b => {
-        if (b.status === "reserved" && b.expiresAt < now) {
-          return { ...b, status: "expired" };
-        }
-        return b;
-      });
+      const updated = bookings.map(b =>
+        b.status === "reserved" && b.expiresAt < now
+        ? { ...b, status: "expired" }
+        : b
+        );
 
       if (JSON.stringify(updated)  !== JSON.stringify(bookings)) {
         setBookings(updated);
@@ -89,7 +90,7 @@ const services = [
       }
     }, []);
 
-    // availability check helper function
+    // availability check helper
     const getUnavailableSlots = (date) => {
       const blocked = bookings
       .filter(
@@ -100,29 +101,24 @@ const services = [
       .map(b => b.time);
 
       const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
-      if (active?.date === date) {
+      if (activeId) {
+        const active = booking.find(b => b.id === activeId);
+        if (active?.date === date) {
         blocked.push(active.time);
       }
     }
+
     return new Set(blocked);
   };
 
-    const isBooked = (date, time) =>
-      bookings.some(
-        b =>
-        b.date === date &&
-        b.time === time &&
-        (b.status === "reserved" || b.status === "paid")
-      );
+  useEffect(() => {
+    if (externalOpen === "open" && selectedService) {
+      setSelectedServices(services[0]);
+    }
+  }, [externalOpen, selectedService]);
 
-      useEffect(() => {
-        if (externalOpen === "open" && !selectedService) {
-          setSelectedService(services[0]);
-        }
-      }, [externalOpen, selectedService]);
-
-    return (
-      <section className="services">
+  return (
+    <section className="services">
         <h2>Menu</h2>
 
         <div className="services-grid">
@@ -133,7 +129,8 @@ const services = [
               <p>{service.description}</p>
               <p className="price">{service.price}</p>
 
-              <button className="booking-btn"
+              <button
+              className="booking-btn"
                 onClick={() => {
                   setSelectedService(service);
                   setSelectedDate("");
@@ -151,13 +148,10 @@ const services = [
         {selectedService && (
         <div className="modal-backdrop">
             <div className="modal">
-
-
                 <h3>Book Appointment</h3>
                 <p className="service-name">
                   {selectedService.name} — {selectedService.price}
                 </p>
-
 
                 {/*Service Selector */}
                 <div className="form-group">
@@ -169,13 +163,20 @@ const services = [
                       s => s.name === e.target.value
                     );
                     setSelectedService(service);
+
+                    if (
+                      selectedDate &&
+                      getUnavailableSlots(selectedDate).has(selectedTime)
+                    ) {
+
                     // reset time on service change
                     setSelectedTime("");
+                    }
                   }}
                 >
-                  {services.map(service => (
-                    <option key={service.name} value={service.name}>
-                      {service.name} — {service.price}
+                  {services.map(s => (
+                    <option key={s.name} value={s.name}>
+                      {s.name} — {s.price}
                     </option>
                   ))}
                 </select>
@@ -183,7 +184,7 @@ const services = [
 
                 {/* Date */}
                 <div className="form-group">
-                <label className="modal-label">Select a date</label>
+                <label>Select a date</label>
                 <input
                 type="date"
                 min={new Date().toISOString().split("T")[0]}
@@ -202,10 +203,8 @@ const services = [
                   <label className="modal-label">Select a time</label>
                   <div className="time-slots">
                     {timeSlots.map(time => {
-                      const booked = isBooked(
-                        selectedDate,
-                        time
-                      );
+                      const booked =
+                      getUnavailableSlots(selectedDate).has(time);
 
                       return (
                         <button
@@ -228,103 +227,74 @@ const services = [
                 {/* Client Info */}
                 {selectedDate && selectedTime && (
                   <>
-                  <div className="client-form">
-                    <label>Full Name</label>
-                    <input
-                    type="text"
-                    placeholder="John Doe"
-                    value={clientInfo.name}
-                    onChange={(e) => {
-                    setClientInfo({ ...clientInfo, name: e.target.value})
-                    setFormError("");
-                  }}
-                  />
-                  </div>
-
-                  <div className="form-group">
-                  <label>Phone Number</label>
                   <input
-                  type="tel"
-                  placeholder="(555) 123-4567"
+                  placeholder="Full Name"
+                  value={clientInfo.name}
+                  onChange={e =>
+                    setClientInfo({ ...clientInfo, name: e.target.value })
+                  }
+                />
+                  <input
+                  placeholder="Phone"
                   value={clientInfo.phone}
-                  onChange={(e) => {
-                  setClientInfo({ ...clientInfo, phone: e.target.value });
-                  setFormError("");
-                }}
+                  onChange={e =>
+                    setClientInfo({ ...clientInfo, phone: e.target.value })
+                  }
                 />
-                </div>
 
-                <div className="form-group">
-                <label>Notes (optional)</label>
-                <textarea
-                  placeholder="Special requests?"
-                  value={clientInfo.notes}
-                  onChange={(e) =>
-                  setClientInfo({ ...clientInfo, notes: e.target.value})
-                }
-                />
-                </div>
+                {formError && <p className="form-error">{formError}</p>}
 
                     {/* booking UI */}
-                    {formError && (
-                      <p className="form-error">
-                        {formError}
-                      </p>
-                    )}
                     <button
-                      className="booking-btn"
-                      disabled={
-                        !clientInfo.name ||
-                        !clientInfo.phone }
-                        onClick={() => {
-                          if (!clientInfo.name || !clientInfo.phone) {
-                            setFormError("Please Enter your name and phone number to continue.");
-                            return;
-                          }
+                  className="booking-btn"
+                  onClick={() => {
+                    if (!clientInfo.name || !clientInfo.phone) {
+                      setFormError("Name and phone are required.");
+                      return;
+                    }
 
-                          setFormError("");
+                    const unavailable = getUnavailableSlots(selectedDate);
+                    if (unavailable.has(selectedTime)) {
+                      setFormError("That time is no longer available.");
+                      return;
+                    }
 
-                        const newBooking = {
-                          id: crypto.randomUUID(),
-                          service: selectedService.name,
-                          price: selectedService.price,
-                          date: selectedDate,
-                          time: selectedTime,
-                          client: { ...clientInfo },
-                          status: "reserved",
-                          createdAt: Date.now(),
-                          expiresAt: Date.now() + EXPIRATION_MINUTES * 60 * 1000
-                        };
+                    const newBooking = {
+                      id: crypto.randomUUID(),
+                      service: selectedService.name,
+                      price: selectedService.price,
+                      date: selectedDate,
+                      time: selectedTime,
+                      client: clientInfo,
+                      status: "reserved",
+                      createdAt: Date.now(),
+                      expiresAt:
+                        Date.now() +
+                        EXPIRATION_MINUTES * 60 * 1000
+                    };
 
-                        const updated = [...bookings, newBooking];
-                        setBookings(updated);
-                        saveBookings(updated);
-                        localStorage.setItem(ACTIVE_BOOKING_KEY, newBooking.id);
+                    const updated = [...bookings, newBooking];
+                    setBookings(updated);
+                    saveBookings(updated);
+                    localStorage.setItem(
+                      ACTIVE_BOOKING_KEY,
+                      newBooking.id
+                    );
 
+                    navigate("/checkout", {
+                      state: { booking: newBooking }
+                    });
+                  }}
+                >
+                  Confirm Booking
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
 
-                        // Close modal + reset
-                        setSelectedService(null);
-                        setSelectedDate("");
-                        setSelectedTime("");
-                        setClientInfo({ name: "", phone: "", notes: "" });
-                        clearExternalOpen?.();
-
-                      // Navigate to check out with booking data
-                      navigate("/checkout", {
-                        state: { booking: newBooking }
-                      });
-                      }}
-                    >
-
-                      Confirm Booking
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-        )}
-      </section>
-    );
-  }
-
-  export default Services;
+export default Services;
