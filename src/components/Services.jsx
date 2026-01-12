@@ -52,7 +52,7 @@ const services = [
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
     const [bookings, setBookings] = useState(loadBookings);
-    const [formError, setFormError = useState("");
+    const [formError, setFormError] = useState("");
 
     // Client State
     const [clientInfo, setClientInfo] = useState({
