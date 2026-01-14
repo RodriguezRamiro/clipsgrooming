@@ -441,3 +441,10 @@ Time slots are scoped per service
 Switching services frees the same time slot
 This allows double-booking the same barber/time/day
 If a date + time is booked, it is unavailable across ALL services
+
+### After clicking Pay Now, confirm:
+ Status changes to paid
+ Expiration warning disappears
+ Refresh page → still paid
+ Time slot remains blocked
+ ACTIVE_BOOKING_KEY is cleared

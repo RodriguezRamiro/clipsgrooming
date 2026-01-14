@@ -10,16 +10,17 @@ export function markBookingAsPaid(bookingId) {
     ? {
         ...b,
         status: markBookingAsPaid,
-        paidAt: Date.now()
+        paidAt: Date.now(),
+        expiresAt: null,
     }
     : b
     );
 
-    localStorage.setItem(STORAGE_KEY, json.stringify(updated));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
-    // Clear active booking since its now finalized
+    // Clear active booking its now finalized
     localStorage.removeItem(ACTIVE_BOOKING_KEY);
 
-        return updated.fin((b) => b.id === bookingId);
+        return updated.find(b => b.id === bookingId);
 
 }
