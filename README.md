@@ -448,3 +448,15 @@ If a date + time is booked, it is unavailable across ALL services
  Refresh page → still paid
  Time slot remains blocked
  ACTIVE_BOOKING_KEY is cleared
+
+ ### Progression
+ Minimal backend structure
+ backend/
+├── server.js
+├── routes/
+│   └── payments.js
+├── services/
+│   └── stripe.js
+├── utils/
+│   └── bookings.js
+└── .env
