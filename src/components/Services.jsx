@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { createBooking } from "../utils/api";
 import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
 
 
 
 const services = [
-    { name: "Line Up", price: "$25", description: "Clean lineup and edges" },
-    { name: "Kids Cuts", price: "$30", description: "Stylish cuts for kids" },
-    { name: "Standard Cut", price: "$35", description: "Classic haircut" },
-    { name: "Facial Hair Only", price: "$20", description: "Beard trim & shape" },
-    { name: "Cut and Facial", price: "$50", description: "Haircut + beard" },
-    { name: "The VIP", price: "$75", description: "Full premium service" }
+    { name: "Line Up", price: 25, description: "Clean lineup and edges" },
+    { name: "Kids Cuts", price: 30, description: "Stylish cuts for kids" },
+    { name: "Standard Cut", price: 35, description: "Classic haircut" },
+    { name: "Facial Hair Only", price: 20, description: "Beard trim & shape" },
+    { name: "Cut and Facial", price: 50, description: "Haircut + beard" },
+    { name: "The VIP", price: 75, description: "Full premium service" }
   ];
 
   const timeSlots = [
@@ -246,48 +247,37 @@ const services = [
 
                     {/* booking UI */}
                     <button
-                  className="booking-btn"
-                  onClick={() => {
-                    if (!clientInfo.name || !clientInfo.phone) {
-                      setFormError("Name and phone are required.");
-                      return;
-                    }
+                      className="booking-btn"
+                      onClick={async () => {
+                        try {
+                          if (!clientInfo.name || !clientInfo.phone) {
+                            setFormError("Name and phone are required.");
+                            return;
+                          }
 
-                    const unavailable = getUnavailableSlots(selectedDate);
-                    if (unavailable.has(selectedTime)) {
-                      setFormError("That time is no longer available.");
-                      return;
-                    }
+                          const payload = {
+                            service: selectedService.name,
+                            price: selectedService.price,
+                            date: selectedDate,
+                            time: selectedTime,
+                            client: clientInfo,
+                          };
 
-                    const newBooking = {
-                      id: crypto.randomUUID(),
-                      service: selectedService.name,
-                      price: selectedService.price,
-                      date: selectedDate,
-                      time: selectedTime,
-                      client: clientInfo,
-                      status: "reserved",
-                      createdAt: Date.now(),
-                      expiresAt:
-                        Date.now() +
-                        EXPIRATION_MINUTES * 60 * 1000
-                    };
+                          const { booking } = await createBooking(payload);
 
-                    const updated = [...bookings, newBooking];
-                    setBookings(updated);
-                    saveBookings(updated);
-                    localStorage.setItem(
-                      ACTIVE_BOOKING_KEY,
-                      newBooking.id
-                    );
+                          localStorage.setItem(ACTIVE_BOOKING_KEY, booking.id);
 
-                    navigate("/checkout", {
-                      state: { booking: newBooking }
-                    });
-                  }}
-                >
-                  Confirm Booking
-                </button>
+                          navigate("/checkout", {
+                            state: { booking },
+                          });
+
+                        } catch (err) {
+                          setFormError(err.message);
+                        }
+                      }}
+                    >
+                      Confirm Booking
+                    </button>
               </>
             )}
           </div>

@@ -11,6 +11,7 @@ export const createBooking = (req, res) => {
     if (!service || !date || !time || !price || !client) {
         return res.status(400).json({ error: "Missing booking fields" });
     }
+
     const booking = {
         id: crypto.randomUUID(),
         service,
@@ -27,4 +28,9 @@ export const createBooking = (req, res) => {
     bookings.push(booking);
 
     res.status(201).json({ booking });
-}
+};
+
+// GET /api/bookings
+export const getBookings = (req, res) => {
+    res.json({ bookings });
+};
