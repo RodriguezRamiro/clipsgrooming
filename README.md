@@ -451,12 +451,21 @@ If a date + time is booked, it is unavailable across ALL services
 
  ### Progression
  Minimal backend structure
- backend/
-├── server.js
-├── routes/
-│   └── payments.js
-├── services/
-│   └── stripe.js
-├── utils/
-│   └── bookings.js
+backend/
+│ └── src/
+│     ├── server.js
+│     ├── routes/
+│     │    └── bookings.js
+│     ├── data/
+│     │    └── bookings.js
+│     └── utils/
+│          └── time.js
 └── .env
+
+
+### Created Booking Store
+files created:
+//src/data/bookings.js
+simulates database
+//src/routes/bookings.js
+establishes routes
