@@ -52,7 +52,7 @@ const services = [
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     // Mock Booking data (backend later)
-    const [bookings, setBookings] = useState(loadBookings);
+    const [bookings, setBookings] = useState([]);
     const [formError, setFormError] = useState("");
 
     // Client State
@@ -62,6 +62,19 @@ const services = [
       notes: ""
     });
 
+    useEffect(() => {
+      const fetchBookings = async () => {
+        try {
+          const res = await fetch("http://localhost:5000/api/bookings");
+          const data = await res.json();
+          setBookings(data.bookings || []);
+        } catch (err) {
+            console.error("Failed to load bookings", err);
+          }
+        };
+
+        fetchBookings();
+    }, []);
     // Redirect if active booking exists
     useEffect(() => {
       const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
