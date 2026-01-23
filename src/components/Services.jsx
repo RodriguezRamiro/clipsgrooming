@@ -80,7 +80,7 @@ const services = [
     useEffect(() => {
       const now = Date.now();
       const updated = bookings.map(b =>
-        b.status === "reserved" && b.expiresAt < now
+        b.status === "reserved" && new Date(b.expiresAt).getTime() < now
         ? { ...b, status: "expired" }
         : b
         );
@@ -103,7 +103,7 @@ const services = [
 
       const activeId = localStorage.getItem(ACTIVE_BOOKING_KEY);
       if (activeId) {
-        const active = booking.find(b => b.id === activeId);
+        const active = bookings.find(b => b.id === activeId);
         if (active?.date === date) {
         blocked.push(active.time);
       }
@@ -114,7 +114,7 @@ const services = [
 
   useEffect(() => {
     if (externalOpen === "open" && selectedService) {
-      setSelectedServices(services[0]);
+      setSelectedService(services[0]);
     }
   }, [externalOpen, selectedService]);
 

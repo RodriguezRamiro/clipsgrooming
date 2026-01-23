@@ -469,3 +469,15 @@ files created:
 simulates database
 //src/routes/bookings.js
 establishes routes
+
+### when you click “Confirm Booking”
+UI validates input
+POST /api/bookings
+Backend:
+Generates ID
+Sets expiration
+Stores booking
+Frontend:
+Saves ACTIVE_BOOKING_KEY
+Navigates to Checkout
+Checkout already works
