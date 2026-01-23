@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createBooking, getBookings } from "../utils/api";
 
-export default funciton TestBooking() {
+export default function TestBooking() {
     const [bookings, setBookings] = useState([]);
 
     const handleCreate = async () => {

@@ -8,6 +8,7 @@ import Banner from "./components/Banner";
 import Profile from "./components/Profile";
 import Services from "./components/Services";
 import Checkout from "./components/Checkout";
+import TestBooking from "./components/TestBooking";
 import Footer from "./components/Footer";
 
 function App() {
@@ -65,8 +66,9 @@ function App() {
   <Route path="/about" element={<Profile />} />
 
     {/* Future Routes */}
-    <TestBooking />
     </Routes>
+    
+    <TestBooking />
 
     <Footer />
     </>

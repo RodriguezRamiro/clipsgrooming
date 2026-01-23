@@ -481,3 +481,14 @@ Frontend:
 Saves ACTIVE_BOOKING_KEY
 Navigates to Checkout
 Checkout already works
+
+### end-to-end flow working:
+Services → API → Booking created → Redirect → Checkout summary
+Frontend → Backend connection
+CORS correctly configured
+Booking creation logic solid
+Navigation state working
+A real reservation system
+With timeouts
+With stateful navigation
+With backend authority
