@@ -65,6 +65,7 @@ function App() {
   <Route path="/about" element={<Profile />} />
 
     {/* Future Routes */}
+    <TestBooking />
     </Routes>
 
     <Footer />
