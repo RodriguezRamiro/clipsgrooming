@@ -8,12 +8,20 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS first
+// CORS
 app.use(cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    origin:  (origin, callback) => {
+        if (!origin) return callback(null, true); // allow curl / server to server
+
+    if (origin.startsWith("http://localhost:")) {
+        return callback(null, true);
+    }
+
+    callback(new Error("Not allowed by CORS"));
+},
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
-}))
+}));
 
 
 //Middleware
