@@ -1,15 +1,18 @@
 /* //src/routes/bookings.routes.js */
 
 import express from "express";
-import { createBooking, getBookings } from "../controllers/bookings.controller.js";
+import { createBooking, getBookings, getAvailability } from "../controllers/bookings.controller.js";
 
 const router = express.Router()
 
-router.get("/", (req, res) => {
-    res.json({ message: "GET bookings work"});
-});
-
+// Fetch all bookings
 router.get("/", getBookings);
+
+// Fetch unavailable slots for date
+router.get("/availability/:date", getAvailability);
+
+// Create a booking
 router.post("/", createBooking);
+
 
 export default router;
