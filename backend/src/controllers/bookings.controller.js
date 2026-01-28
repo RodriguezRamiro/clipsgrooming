@@ -6,11 +6,25 @@ import { bookings } from "../data/bookings.js";
 import crypto from "crypto";
 
 
-const now = Date.now();
+
+const expireOldBookings = () => {
+    const now = Date.now();
+
+    bookings.forEach(b => {
+        if (
+            b.status === "reserved" &&
+            new Date(b.expiresAt).getTime() <= now
+        ) {
+            b.status = "expired";
+        }
+    });
+};
 
 // POST /api/bookings
 
 export const createBooking = (req, res) => {
+    expireOldBookings();
+
     const { service, date , time, price, client } = req.body;
     const now = new Date().now;
 
@@ -28,27 +42,18 @@ export const createBooking = (req, res) => {
         });
     }
 
-    // prevent past-time bookings
-    if (bookingDateTime.getTime() < now ) {
-        return res.status(400).json({
-            error: "Cannot book a past time slot"
-        });
-    }
-
     // Prevent double booking
-    const conflict = bookings.find(b =>
-        b.date === date &&
+    const conflict = booking.find(b =>
+        b.date=== date &&
         b.time === time &&
-        (b.status === "reserved" ||
-        b.status === "paid") &&
-        new Date(b.expiresAt).getTime() > now
+        (b.status === "reserved" || b.status === "paid")
         );
 
-        if (conflict) {
-            return res.status(409).json({
-                error: "Time slot already booked"
-            });
-        }
+    if ( conflict ) {
+        return res.status(409).json({
+            error: "Time slot already booked"
+        });
+    }
 
     // Create booking
     const booking = {
@@ -63,20 +68,23 @@ export const createBooking = (req, res) => {
         expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 60 mins hold
     };
 
-    bookings.push(booking);
+    booking.push(booking);
 
     res.status(201).json({ booking });
 };
 
+
 // GET /api/bookings
 export const getBookings = (req, res) => {
+    expireOldBookings();
     res.json({ bookings });
 };
 
 // GET /api/bookings/availability/:date
 export const getAvailability = (req, res) => {
+    expireOldBookings();
+
     const { date } = req.params;
-    const now = Date.now();
 
     const blocked = bookings.filter(
         b =>
