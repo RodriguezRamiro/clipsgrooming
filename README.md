@@ -493,3 +493,10 @@ With timeouts
 With stateful navigation
 With backend authority
 
+###
+new version of controller supports
+correct variable order
+no hoisting issues
+accurate time comparison
+backend enforced booking rules
+multi-user safe.

@@ -1,6 +1,6 @@
 /* //backend/src/controllers/bookings.controller.js */
 
-// temp in memore store (db Comes later)
+// (db Comes later)
 
 import { bookings } from "../data/bookings.js";
 import crypto from "crypto";
@@ -19,6 +19,9 @@ export const createBooking = (req, res) => {
         return res.status(400).json({ error: "Missing booking fields" });
     }
 
+    const bookingDateTime = new Date(`${date} ${time}`);
+
+    // Prevent past-time bookings
     if (bookingDateTime.getTime() < now) {
         return res.status(400).json({
             error: "Cannot book a past time"
@@ -26,13 +29,11 @@ export const createBooking = (req, res) => {
     }
 
     // prevent past-time bookings
-    const bookingDateTime = new Date(`${date} ${time}`);
     if (bookingDateTime.getTime() < now ) {
         return res.status(400).json({
             error: "Cannot book a past time slot"
         });
     }
-
 
     // Prevent double booking
     const conflict = bookings.find(b =>
@@ -59,7 +60,7 @@ export const createBooking = (req, res) => {
         client,
         status: "reserved",
         createdAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 60 mins
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 60 mins hold
     };
 
     bookings.push(booking);
@@ -72,6 +73,7 @@ export const getBookings = (req, res) => {
     res.json({ bookings });
 };
 
+// GET /api/bookings/availability/:date
 export const getAvailability = (req, res) => {
     const { date } = req.params;
     const now = Date.now();
