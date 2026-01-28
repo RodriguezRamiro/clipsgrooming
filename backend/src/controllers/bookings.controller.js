@@ -96,3 +96,35 @@ export const getAvailability = (req, res) => {
 
     res.json({ blocked });
 };
+
+// PATCH /api/bookings/:id/pay
+export const markBookingPaid = (req, res) => {
+    const { id } = req.params;
+    const now = Date.now();
+
+    const booking = bookings.find(b => b.id === id);
+
+    if (!booking) {
+        return res.status(404).json({ error: "Booking not found" });
+    }
+
+    if (booking.status === "paid") {
+        return res.status(400).json({ error: "Booking already paid" });
+    }
+
+    if (booking.status === "expired") {
+        return res.status(400).json({ error: " booking has expired" });
+    }
+
+    if ( booking.status === reserved &&
+        new Date(booking.expiresAt).getTime() <= now
+        ) {
+            booking.status = "expired";
+            return res.status(40).json({ error: "reservaion expired" });
+        }
+
+        booking.status = "paid";
+        booking.paidAt = new Date().toISOString();
+
+        res.json({ booking });
+};
