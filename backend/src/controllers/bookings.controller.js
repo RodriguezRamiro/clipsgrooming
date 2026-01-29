@@ -109,7 +109,7 @@ export const markBookingPaid = (req, res) => {
     }
 
     if (booking.status === "paid") {
-        return res.status(400).json({ error: "Booking already paid" });
+        return res.status(400).json({ booking });
     }
 
     if (booking.status === "expired") {

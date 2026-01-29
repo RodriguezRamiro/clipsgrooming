@@ -500,3 +500,18 @@ no hoisting issues
 accurate time comparison
 backend enforced booking rules
 multi-user safe.
+
+###
+Current Flow
+"Reserved"
+temporary hold
+expires
+can free slot
+"Paid"
+Permanent booking
+never expires
+slot always bocked
+conflict prevention
+expiring holds
+payment state transition
+multi-tab consistancy

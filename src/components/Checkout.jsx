@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { markBookingAsPaid } from "../utils/bookingStatus";
+import { markBookingPaid } from "../utils/bookingStatus";
 import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
 
 
@@ -80,16 +80,26 @@ function Checkout() {
             </div>
 
             <div className="checkout-actions">
-                <button className="booking-btn" onClick={() => {
-                    const updatedBooking = markBookingAsPaid(booking.id);
+                {booking.status !== "paid" && (
+                <button
+                className="booking-btn"
+                onClick={async () => {
+                    try {
+                    const { booking: updatedBooking } =
+                    await markBookingPaid(booking.id);
+
                     navigate("/checkout", {
                         replace: true,
                         state: { booking: updatedBooking },
                     });
+                } catch (err) {
+                    alert(err.message);
+                }
                 }}
                 >
                     Pay Now
                 </button>
+                )}
 
 
 

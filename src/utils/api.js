@@ -20,11 +20,26 @@ export async function createBooking(payload) {
 }
 
 export async function getBookings() {
-    const res = await fetch(`${API_BASE}/api/bookings`);
+    const res = await fetch(`${API_BASE}/bookings`);
 
     if(!res.ok) {
         throw new Error("Failed to fetch bookings");
     }
 
     return res.json();
+}
+
+export async function markBookingPaid(id) {
+    const res = await fetch(`${API_BASE}/bookings/${id}/pay`, {
+        method: "PATCH",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok){
+        throw new Error(data.error || "Failed to mark booking as paid");
+
+    }
+
+    return data;
 }
