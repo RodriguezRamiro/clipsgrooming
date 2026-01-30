@@ -2,14 +2,14 @@
 
 import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
 
-export function markBookingAsPaid(bookingId) {
+export function markBookingPaid(bookingId) {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     const updated = stored.map((b) =>
     b.id === bookingId
     ? {
         ...b,
-        status: markBookingAsPaid,
+        status: markBookingPaid,
         paidAt: Date.now(),
         expiresAt: null,
     }
