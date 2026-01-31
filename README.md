@@ -515,3 +515,18 @@ conflict prevention
 expiring holds
 payment state transition
 multi-tab consistancy
+
+### Mongo_db set up
+
+Replace array with monogB via mongoose
+keep the same api behavior
+no front end changes
+create
+backend/src/models/booking.js
+mirrors excatly what was already desing
+remove data.bookings.js keep monggose as tuth source
+replace create booking with monog backed verison
+Booking.findOne() replaces array search
+mongo handles IDs automatically
+logic stays relative
+

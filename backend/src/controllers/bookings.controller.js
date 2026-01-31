@@ -1,53 +1,50 @@
 /* //backend/src/controllers/bookings.controller.js */
 
 // (db Comes later)
-
-import { bookings } from "../data/bookings.js";
-import crypto from "crypto";
+import Booking from "../models/booking.js";
 
 
 
-const expireOldBookings = () => {
-    const now = Date().now;
+const expireOldBookings = async () => {
+    const now = new Date;
 
-    bookings.forEach(b => {
-        if (
-            b.status === "reserved" &&
-            new Date(b.expiresAt).getTime() <= now
-        ) {
-            b.status = "expired";
+    await Booking.UpdateMany(
+        {
+            status: "reserved",
+            expiresAt: { $lte: now }
         }
-    });
-};
+    );
+}
 
 // POST /api/bookings
 
-export const createBooking = (req, res) => {
-    expireOldBookings();
+export const createBooking = async (req, res) => {
 
-    const { service, date , time, price, client } = req.body;
-    const now = new Date().now;
+    try {
+    await expireOldBookings();
+
+        const { service, date , time, price, client } = req.body;
+        const now = Date.now();
 
     // Validate input
     if (!service || !date || !time || !price || !client) {
         return res.status(400).json({ error: "Missing booking fields" });
     }
 
-    const bookingDateTime = new Date(`${date} ${time}`);
-
+    const bookingDateTime = Date(`${date} ${time}`);
     // Prevent past-time bookings
     if (bookingDateTime.getTime() < now) {
         return res.status(400).json({
             error: "Cannot book a past time"
-        });
-    }
+        }
 
     // Prevent double booking
-    const conflict = bookings.find(b =>
-        b.date=== date &&
-        b.time === time &&
-        (b.status === "reserved" || b.status === "paid")
-        );
+    const conflict = await Booking.findOne({
+        date,
+        time,
+        status: { $in: ["reserved", "paid"] },
+        expiresAt: { $gt: new Date() }
+    });
 
     if ( conflict ) {
         return res.status(409).json({
@@ -56,79 +53,73 @@ export const createBooking = (req, res) => {
     }
 
     // Create booking
-    const booking = {
-        id: crypto.randomUUID(),
+    const booking = await Booking.create({
         service,
         date,
         time,
         price,
         client,
         status: "reserved",
-        createdAt: new Date().toISOString(),
         expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 60 mins hold
-    };
-
-    bookings.push(booking);
+    });
 
     res.status(201).json({ booking });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error"});
+  }
 };
-console.log("Creating booking:", req.body);
-console.log("Current bookings:", bookings);
-
 
 
 // GET /api/bookings
-export const getBookings = (req, res) => {
-    expireOldBookings();
+export const getBookings = async (req, res) => {
+    try {
+    await expireOldBookings();
+    const bookings = await Booking.find().sort({ createdAt: -1 });
     res.json({ bookings });
+    } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
 };
 
 // GET /api/bookings/availability/:date
-export const getAvailability = (req, res) => {
-    expireOldBookings();
+export const getAvailability = async (req, res) => {
+    try {
+      await expireOldBookings();
+      const { date } = req.params;
 
-    const { date } = req.params;
-    const now = Date.now();
+      const bookings = await Booking.find({
+        date, Status: { $in: ["reserved", "paid"] },
+        expiresAt: { $gt: new Date() }
+      });
 
-    const blocked = bookings
-        .filter(b =>
-            b.date === date &&
-            (b.status === "reserved" || b.status === "paid") &&
-            new Date(b.expiresAt).getTime() > now
-    )
-    .map(b => b.time);
-
-    res.json({ blocked });
+      const blocked = bookings.map(b => b.time);
+      res.json({ blocked });
+    } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
 };
 
 // PATCH /api/bookings/:id/pay
-export const markBookingPaid = (req, res) => {
+export const markBookingPaid = async (req, res) => {
+    try {
     const { id } = req.params;
-    const now = Date.now();
 
-    const booking = bookings.find(b => b.id === id);
-
+    const booking = await Booking.findById(id);
     if (!booking) {
         return res.status(404).json({ error: "Booking not found" });
     }
 
-    if (booking.status === "paid") {
-        return res.status(400).json({ booking });
-    }
-
     if (booking.status === "expired") {
-        return res.status(400).json({ error: " booking has expired" });
+        return res.status(400).json({ error: "Booking has expired" });
     }
 
-    if ( booking.status === "reserved" &&
-        new Date(booking.expiresAt).getTime() <= now
-        ) {
-            booking.status = "expired";
-            return res.status(400).json({ error: "reservaion expired" });
-        }
+    booking.status = "paid";
+    booking.paidAt = new Date();
 
-        booking.status = "paid";
-        booking.paidAt = new Date().toISOString();
-
-        res.json({ booking });
+    await booking.save();
+    res.json({ booking });
+} catch (err) {
+    res.status(500).json({ error: "Server Error" });
+}
 };

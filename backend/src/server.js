@@ -1,9 +1,15 @@
 import express from "express";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import bookingsRouter from "./routes/bookings.routes.js";
 
 dotenv.config();
+
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log("MongoDb Connected"))
+    .catch(err => console.error("MongoDB error:", err));
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
