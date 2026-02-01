@@ -1,3 +1,5 @@
+/* //backend/src/models/bookings.js */
+
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
@@ -33,7 +35,7 @@ const bookingSchema = new mongoose.Schema(
             default: "reserved",
         },
         expiresAt: {
-            type: date,
+            type: Date,
             required: true,
         },
         PaidAt: {

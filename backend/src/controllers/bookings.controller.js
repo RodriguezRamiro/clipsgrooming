@@ -1,20 +1,23 @@
 /* //backend/src/controllers/bookings.controller.js */
 
 // (db Comes later)
-import Booking from "../models/booking.js";
+import Booking from "../models/bookings.js";
 
 
 
 const expireOldBookings = async () => {
-    const now = new Date;
+    const now = new Date();
 
-    await Booking.UpdateMany(
+    await Booking.updateMany(
         {
             status: "reserved",
             expiresAt: { $lte: now }
+        },
+        {
+            $set: { status: "expired" }
         }
     );
-}
+};
 
 // POST /api/bookings
 
@@ -26,18 +29,19 @@ export const createBooking = async (req, res) => {
         const { service, date , time, price, client } = req.body;
         const now = Date.now();
 
-    // Validate input
-    if (!service || !date || !time || !price || !client) {
-        return res.status(400).json({ error: "Missing booking fields" });
-    }
-
-    const bookingDateTime = Date(`${date} ${time}`);
-    // Prevent past-time bookings
-    if (bookingDateTime.getTime() < now) {
-        return res.status(400).json({
-            error: "Cannot book a past time"
+        // Validate input
+        if (!service || !date || !time || !price || !client) {
+            return res.status(400).json({ error: "Missing booking fields" });
         }
 
+        const bookingDateTime = new Date(`${date}T${time}`);
+        // Prevent past-time bookings
+        if (bookingDateTime.getTime() < now) {
+            return res.status(400).json({
+                error: "Cannot book a past time"
+            });
+
+        }
     // Prevent double booking
     const conflict = await Booking.findOne({
         date,
@@ -60,7 +64,7 @@ export const createBooking = async (req, res) => {
         price,
         client,
         status: "reserved",
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 60 mins hold
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000) // 60 mins hold
     });
 
     res.status(201).json({ booking });
@@ -89,7 +93,8 @@ export const getAvailability = async (req, res) => {
       const { date } = req.params;
 
       const bookings = await Booking.find({
-        date, Status: { $in: ["reserved", "paid"] },
+        date,
+        status: { $in: ["reserved", "paid"] },
         expiresAt: { $gt: new Date() }
       });
 
@@ -104,19 +109,28 @@ export const getAvailability = async (req, res) => {
 export const markBookingPaid = async (req, res) => {
     try {
     const { id } = req.params;
+    const now = Date()
 
     const booking = await Booking.findById(id);
     if (!booking) {
         return res.status(404).json({ error: "Booking not found" });
     }
 
+    // Already expired
     if (booking.status === "expired") {
         return res.status(400).json({ error: "Booking has expired" });
     }
 
+    // Time-based expiration check
+    if (booking.expiresAt < now) {
+        booking.status = "expired";
+        await booking.save();
+        return res.status(400).json({ error: "Booking has expired" });
+      }
+
     booking.status = "paid";
     booking.paidAt = new Date();
-
+    
     await booking.save();
     res.json({ booking });
 } catch (err) {

@@ -9,6 +9,7 @@ dotenv.config();
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("MongoDb Connected"))
     .catch(err => console.error("MongoDB error:", err));
+    console.log("Mongo URI:", process.env.MONGODB_URI);
 
 
 const app = express();
