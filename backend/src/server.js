@@ -4,20 +4,17 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bookingsRouter from "./routes/bookings.routes.js";
 import paymentsRouter from "./routes/payments.routes.js";
-import Stripe from "stripe";
 
 
 
 dotenv.config();
+console.log("Stripe key loaded:", !! process.env.STRIPE_SECRET_KEY);
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("MongoDb Connected"))
     .catch(err => console.error("MongoDB error:", err));
     console.log("Mongo URI:", process.env.MONGODB_URI);
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-export { stripe };
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,10 +23,9 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
     origin:  (origin, callback) => {
         if (!origin) return callback(null, true); // allow curl / server to server
-
-    if (origin.startsWith("http://localhost:")) {
-        return callback(null, true);
-    }
+        if (origin.startsWith("http://localhost:")) {
+            return callback(null, true);
+        }
 
     callback(new Error("Not allowed by CORS"));
 },
@@ -49,12 +45,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/bookings", bookingsRouter);
+app.use("/api/payments", paymentsRouter);
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-app.use("/api/payments", paymentsRouter);
-
-
 export default app;

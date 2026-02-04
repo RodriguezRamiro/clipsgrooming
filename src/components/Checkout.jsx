@@ -85,18 +85,18 @@ function Checkout() {
                 className="booking-btn"
                 onClick={async () => {
                     try {
-                    const { booking: updatedBooking } =
-                    await markBookingPaid(booking.id);
+                    const res = await createCheckoutSession(booking._id);
 
-                    navigate("/checkout", {
-                        replace: true,
-                        state: { booking: updatedBooking },
-                    });
+                    if (!res.url) {
+                        throw new Error("Strpe checkout URL missing");
+                    }
+
+                    window.location.href = res.url;
                 } catch (err) {
                     alert(err.message);
                 }
-                }}
-                >
+            }}
+            >
                     Pay Now
                 </button>
                 )}

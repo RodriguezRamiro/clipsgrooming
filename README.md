@@ -530,3 +530,13 @@ Booking.findOne() replaces array search
 mongo handles IDs automatically
 logic stays relative
 
+### Stripe Checkout Session
+Client clicks Pay Now
+Redirected to Stripe-hosted page
+Stripe handles card, Apple Pay, Google Pay
+On success → webhook confirms payment
+Backend marks booking as paid
+Backend state = source of truth
+Payments that can’t be faked
+Reservations that expire automatically
+A system that scales to real customers

@@ -43,3 +43,18 @@ export async function markBookingPaid(id) {
 
     return data;
 }
+
+export async function createCheckoutSession(bookingId) {
+    const res = await fetch("/api/payments/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to create checkout session");
+    }
+
+    return res.json(); // { url }
+  }
+

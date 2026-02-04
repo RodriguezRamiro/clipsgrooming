@@ -1,13 +1,13 @@
 /* //backend/src/controllers/payments.controller.js */
 
+import stripe from "../stripe/stripe.js";
 import Booking from "../models/bookings.js"
-import { stripe } from "../server.js";
 
 export const createCheckoutSession = async ( req, res ) => {
     try {
-        const { id } = req.params;
+        const { bookingId } = req.body;
 
-        const booking = await Booking.findById(id);
+        const booking = await Booking.findById(bookingId);
 
         if (!booking) {
             return res.status(404).json({ error: "Booking not found" });
@@ -20,8 +20,8 @@ export const createCheckoutSession = async ( req, res ) => {
         }
 
         const sessions = await stripe.checkout.sessions.create({
-            mode: "payment",
             payment_method_types: ["card"],
+            mode: "payment",
             line_items: [
                 {
                     price_data: {
@@ -29,16 +29,16 @@ export const createCheckoutSession = async ( req, res ) => {
                         product_data: {
                             name: booking.service,
                         },
-                        unit_amount: booking.price * 100,
+                        unit_amount: booking.price * 100, //cents
                     },
                     quantity: 1,
                 },
             ],
-            success_url: "http://localhost:5173/payment-success",
-            cancel_url: "http://localhost:5173/payment-cancel",
             metadata: {
                 bookingId: booking._id.toString(),
             },
+            success_url: "http://localhost:5173/payment-success",
+            cancel_url: "http://localhost:5173/payment-cancel",
         });
 
         res.json({ url: sessions.url });
