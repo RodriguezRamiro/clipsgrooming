@@ -550,3 +550,18 @@ Secure payment handoff
 No CORS issues
 No port issues
 No env issues
+
+### Technical notes
+notes to self, do not hardcode ports,
+leads to fragile ssytems.
+better solution
+front end never knows ports
+front end talks to api
+des server handles routing.
+implement the vite proxy to never have that issue.
+
+### next steps
+Step 1 Build the PaymentSuccess page
+Step 2: Add Stripe Webhooks
+Step 3: Small fixes & polish
+Step 4: Admin dashboard

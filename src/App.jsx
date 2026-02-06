@@ -63,11 +63,14 @@ function App() {
   />
 
   <Route path="/checkout" element={<Checkout />} />
+  <Route path="/payment-success" element={<PaymentSuccess />} />
+  <Route path="/payment-cancel" element={<PaymentCancel />} />
+
   <Route path="/about" element={<Profile />} />
 
     {/* Future Routes */}
     </Routes>
-    
+
     <TestBooking />
 
     <Footer />
