@@ -34,14 +34,13 @@ export async function markBookingPaid(id) {
         method: "PATCH",
     });
 
-    const data = await res.json();
-
     if (!res.ok){
-        throw new Error(data.error || "Failed to mark booking as paid");
+        const text = await res.text();
+        throw new Error(text || "Failed to mark booking as paid");
 
     }
 
-    return data;
+    return res.json();
 }
 
 export async function createCheckoutSession(bookingId) {
@@ -52,9 +51,9 @@ export async function createCheckoutSession(bookingId) {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to create checkout session");
+        const err = await res.json();
+        throw new Error(err.error || "Failed to create checkout session");
     }
 
     return res.json(); // { url }
   }
-

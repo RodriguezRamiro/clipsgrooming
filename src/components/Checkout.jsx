@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { markBookingPaid } from "../utils/bookingStatus";
 import { STORAGE_KEY, ACTIVE_BOOKING_KEY } from "../constants/bookingKeys";
+import { createCheckoutSession } from "../utils/api";
+
 
 
 

@@ -109,7 +109,7 @@ export const getAvailability = async (req, res) => {
 export const markBookingPaid = async (req, res) => {
     try {
     const { id } = req.params;
-    const now = Date()
+    const now = new Date()
 
     const booking = await Booking.findById(id);
     if (!booking) {
@@ -130,7 +130,7 @@ export const markBookingPaid = async (req, res) => {
 
     booking.status = "paid";
     booking.paidAt = new Date();
-    
+
     await booking.save();
     res.json({ booking });
 } catch (err) {

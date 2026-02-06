@@ -25,7 +25,7 @@ export const createCheckoutSession = async ( req, res ) => {
             line_items: [
                 {
                     price_data: {
-                        currency: "used",
+                        currency: "usd",
                         product_data: {
                             name: booking.service,
                         },
