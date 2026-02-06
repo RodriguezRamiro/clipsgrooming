@@ -8,6 +8,7 @@ import Banner from "./components/Banner";
 import Profile from "./components/Profile";
 import Services from "./components/Services";
 import Checkout from "./components/Checkout";
+import PaymentSuccess from "./components/PaymentSuccess";
 import TestBooking from "./components/TestBooking";
 import Footer from "./components/Footer";
 

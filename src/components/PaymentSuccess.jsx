@@ -1,36 +1,42 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function PaymentSuccess() {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Stripe may append ?sesion_id=...
+    const sessionId = new URLSearchPrams(location.search).get"session_id");
 
     useEffect(() => {
         // optional auto redirect after few seconds
         const timer = setTimeout(() => {
             navigate("/");
-        }, 6000);
+        }, 7000);
 
         return () => clearTimeout(timer);
     }, [navigate]);
 
     return (
         <section className="checout success">
-            <h2>payment Successful</h2>
+            <h2>Payment Successful</h2>
 
             <p>
-                Thanks you for your payment. Your appointment Has been confirmed.
+                Your payment was proccessed successfully and your appointment is confirmed.
             </p>
 
-            <p> You will recieve a confirmation shortly.
-
+            <p>
+                If you have any questions, feel free to reach out.
             </p>
 
+            <div className="checkout-actions">
             <button
             className="booking-btn"
             onClick={() => navigate("/")}
             >
                 Back to Home
             </button>
+         </div>
         </section>
     );
 }
