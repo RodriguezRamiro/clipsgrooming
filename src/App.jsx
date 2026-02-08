@@ -9,6 +9,7 @@ import Profile from "./components/Profile";
 import Services from "./components/Services";
 import Checkout from "./components/Checkout";
 import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentCancel from "./components/PaymentCancel";
 import TestBooking from "./components/TestBooking";
 import Footer from "./components/Footer";
 

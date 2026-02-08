@@ -6,7 +6,7 @@ function PaymentSuccess() {
     const location = useLocation();
 
     // Stripe may append ?sesion_id=...
-    const sessionId = new URLSearchPrams(location.search).get"session_id");
+    const sessionId = new URLSearchParams(location.search).get("session_id");
 
     useEffect(() => {
         // optional auto redirect after few seconds
@@ -18,7 +18,7 @@ function PaymentSuccess() {
     }, [navigate]);
 
     return (
-        <section className="checout success">
+        <section className="checkout success">
             <h2>Payment Successful</h2>
 
             <p>

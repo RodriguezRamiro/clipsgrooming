@@ -565,3 +565,13 @@ Step 1 Build the PaymentSuccess page
 Step 2: Add Stripe Webhooks
 Step 3: Small fixes & polish
 Step 4: Admin dashboard
+
+
+### End-to-End Working
+Booking created
+Stripe Checkout launched
+Test payment succeeds
+Stripe redirects back with session_id
+Success page renders correctly
+Auto-redirect back to home
+App state survives the redirect
