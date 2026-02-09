@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import bookingsRouter from "./routes/bookings.routes.js";
 import paymentsRouter from "./routes/payments.routes.js";
+import stripePkg from "stripe";
+import { stripeWebhookHandler } from "./controllers/stripeWebhook.js";
+
 
 
 
@@ -19,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI)
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
 // CORS
 app.use(cors({
     origin:  (origin, callback) => {
@@ -27,13 +31,20 @@ app.use(cors({
             return callback(null, true);
         }
 
-    callback(new Error("Not allowed by CORS"));
-},
+        callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 
 
+app.use("/api/stripe", stripeWebhookRoute);
+
+app.post(
+    "/api/stripe/webhook",
+    express.raw({ type: "application/json" }),
+    stripeWebhookHandler
+);
 //Middleware
 
 app.use(express.json());
@@ -46,7 +57,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
-
 
 
 

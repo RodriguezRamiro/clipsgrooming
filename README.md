@@ -575,3 +575,15 @@ Stripe redirects back with session_id
 Success page renders correctly
 Auto-redirect back to home
 App state survives the redirect
+
+
+### Stripe Webhooks Foundation
+backend confirms payment independently
+Bookings get marked paid
+
+### realization - Trivial?
+from spanish to english adjectives are inverted. like wise in JS
+ex: event.data.object - inglish
+ovject.event.data - spanish
+
+
