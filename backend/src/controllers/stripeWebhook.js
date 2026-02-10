@@ -46,3 +46,5 @@ export const stripeWebhookHandler = (req, res) => {
 
     res.json({ recieved: true });
 };
+
+export default stripeWebhookHandler;

@@ -3,15 +3,15 @@
 import express from "express";
 import Stripe from "stripe";
 import bodyParser from "body-parser";
+import Booking from "../models/bookings.js";
 
 const router = express.Router()
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post("/webhook",
 bodyParser.raw({ type: "application/json" }),
-(req, res) => {
+async (req, res) => {
     const sig = req.headers["stripe-signature"];
-
     let event;
 
     try {
@@ -25,18 +25,31 @@ bodyParser.raw({ type: "application/json" }),
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
+    console.log("🔔 Stripe Event:", event.type);
+
     // Handle success check out
-    if (event.type === "chekout.session.completed") {
+    if (event.type === "checkout.session.completed") {
         const session = event.data.object;
+        const bookingId = session.metadata?.bookingId;
 
-        console.log("💰 Payment confirmed:", session.id);
+        if (!bookingId){
+            console.warn("⚠️ Missing bookingId in session metadata");
+            return res.json({ received: true });
+        }
 
-        // Todo:
-        // 1. find booking by session.id
-        // 2. Mark booking as paid
-        // 3. Store payment intent ID
+        await Booking.findByIdAndUpdate(bookingId, {
+            status: "paid",
+            paid: true,
+            stripeSessionId: session.id,
+            stripePaymentIntentId: session.payment_intent,
+            paidAt: new Date(),
+        });
+
+        console.log("✅ Booking marked as PAID:", bookingId);
+
     }
     res.json({ recieved: true });
+
   }
 );
 
