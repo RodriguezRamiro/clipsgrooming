@@ -32,25 +32,38 @@ async (req, res) => {
         const session = event.data.object;
         const bookingId = session.metadata?.bookingId;
 
-        if (!bookingId){
+        if (!bookingId) {
             console.warn("⚠️ Missing bookingId in session metadata");
             return res.json({ received: true });
         }
 
-        await Booking.findByIdAndUpdate(bookingId, {
-            status: "paid",
-            paid: true,
-            stripeSessionId: session.id,
-            stripePaymentIntentId: session.payment_intent,
-            paidAt: new Date(),
-        });
+        const booking = await Booking.findById(bookingId);
 
-        console.log("✅ Booking marked as PAID:", bookingId);
+        if (!booking) {
+            console.warn("⚠️ Booking not found:", bookingId);
+            return res.json({ received: true });
+        }
 
+        // Idempotency guard (CRITICAL)
+        if (booking.paid) {
+            console.log("🔁 Booking already paid, skipping:", bookingId);
+            return res.json({ received: true });
+        }
+
+        booking.status = "paid";
+        booking.paid = true;
+        booking.locked = true;
+        booking.paidAt = new Date();
+        booking.paymentIntentId = session.payment_intent;
+        booking.stripeSessionId = session.id;
+
+        await booking.save();
+
+        console.log("✅ Booking locked & paid:", bookingId);
     }
+
     res.json({ recieved: true });
 
-  }
-);
+});
 
 export default router;

@@ -43,8 +43,20 @@ const bookingSchema = new mongoose.Schema(
             required: true,
             index: true,
         },
+
+        paid: {
+            type: Boolean,
+            default: false,
+        },
+
         PaidAt: {
             type: Date,
+            paymentIntentId: String,
+
+            locked: {
+                type: Boolean,
+                default: false,
+            },
         },
     },
     { timestamps: true }

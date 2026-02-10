@@ -19,6 +19,11 @@ export const createCheckoutSession = async ( req, res ) => {
             });
         }
 
+        if ( booking.paid || booking.locked) {
+            return res.status(400).json({
+                error: "This booking has already been paid",
+            });
+        }
         const sessions = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
