@@ -62,6 +62,42 @@ async (req, res) => {
         console.log("✅ Booking locked & paid:", bookingId);
     }
 
+    // Refound Handling
+    if (event.type === "charged.refunded") {
+        const charge = event.data.object;
+
+        const paymentIntentId = charge.payment_intent;
+
+        if(!paymentIntentId) {
+            console.warn("No paymentIntentId on refound event");
+            return res.json({ received: true });
+        }
+
+        const booking = await Booking.findOne({
+            paymentIntentId: paymentIntentId,
+        });
+
+        if (!booking) {
+            console.warn("Booking not found for refound:", paymentIntentId);
+            return res.json({ received: true });
+        }
+
+        // Idempotency guard
+        if(booking.status === "refunded") {
+            console.log("Already refunded:", booking._id);
+            return res.json({ received: true });
+        }
+
+        booking.status = "refunded";
+        booking.paid = false;
+        booking.refundedAt = new Date();
+        booking.locked = false;
+
+        await booking.save();
+
+        console.log("💸 Booking marked as REFUNDED:", booking._id);
+    }
+
     res.json({ recieved: true });
 
 });
