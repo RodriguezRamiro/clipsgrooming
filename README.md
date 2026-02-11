@@ -586,4 +586,15 @@ from spanish to english adjectives are inverted. like wise in JS
 ex: event.data.object - inglish
 ovject.event.data - spanish
 
+### Fault-tolerant payment lifecycle system
+refounds logic implemented
+on checkout.session.completed
+send: booking confirmation
+app details
+receipt
+reschedule instructions
+on charge.refunded
+send: refound confirmation email
+refound processing timeline
+
 

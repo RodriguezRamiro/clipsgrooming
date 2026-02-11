@@ -13,7 +13,7 @@ export const stripeWebhookHandler = (req, res) => {
         event = stripe.webhooks.constructEvent(
             req.body,
             sig,
-            process.env.STRIPE_WEBhook_SECRET
+            process.env.STRIPE_WEBHOOK_SECRET
         );
 
     } catch ( err ) {
@@ -45,6 +45,9 @@ export const stripeWebhookHandler = (req, res) => {
     }
 
     res.json({ recieved: true });
+    console.log("Webhook Secret Loaded:", process.env.STRIPE_WEBHOOK_SECRET);
+    console.log("Signature header:", sig);
+
 };
 
 export default stripeWebhookHandler;
