@@ -7,8 +7,7 @@ import cors from "cors";
 
 import bookingsRouter from "./routes/bookings.routes.js";
 import paymentsRouter from "./routes/payments.routes.js";
-import stripeWebhookHandler from "./controllers/stripeWebhook.js";
-
+import stripeWebhookRouter from "./routes/stripeWebhooks.js";
 
 dotenv.config();
 
@@ -44,13 +43,9 @@ app.use(
 
 
 // Stripe WebHook
-app.post("/api/stripe/webhook",
-        express.raw({ type: "application/json" }),
-        stripeWebhookHandler
-        );
+app.post("/api/stripe", stripeWebhookRouter);
 
 //Middleware
-
 app.use(express.json());
 
 //Test Route

@@ -45,8 +45,6 @@ async (req, res) => {
             return res.json({ received: true });
         }
 
-        const booking = await Booking.findById(bookingId);
-
         if (!booking) {
             console.warn("⚠️ Booking not found:", bookingId);
             return res.json({ received: true });
@@ -70,7 +68,7 @@ async (req, res) => {
     }
 
     // Refound Handling
-    if (event.type === "charged.refunded") {
+    if (event.type === "charge.refunded") {
         const charge = event.data.object;
         const paymentIntentId = charge.payment_intent;
 
