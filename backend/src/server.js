@@ -44,7 +44,7 @@ app.use(
 
 
 // Stripe WebHook
-app.use("/api/stripe/webhook",
+app.post("/api/stripe/webhook",
         express.raw({ type: "application/json" }),
         stripeWebhookHandler
         );

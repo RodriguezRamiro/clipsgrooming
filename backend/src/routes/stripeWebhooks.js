@@ -27,7 +27,8 @@ async (req, res) => {
 
     console.log("🔔 Stripe Event:", event.type);
 
-    // Handle success check out
+    try {
+    // Payment success
     if (event.type === "checkout.session.completed") {
         const session = event.data.object;
         const bookingId = session.metadata?.bookingId;
@@ -44,9 +45,15 @@ async (req, res) => {
             return res.json({ received: true });
         }
 
-        // Idempotency guard (CRITICAL)
+        const booking = await Booking.findById(bookingId);
+
+        if (!booking) {
+            console.warn("⚠️ Booking not found:", bookingId);
+            return res.json({ received: true });
+        }
+
         if (booking.paid) {
-            console.log("🔁 Booking already paid, skipping:", bookingId);
+            console.log("🔁 Booking already paid:", bookingId);
             return res.json({ received: true });
         }
 
@@ -59,13 +66,12 @@ async (req, res) => {
 
         await booking.save();
 
-        console.log("✅ Booking locked & paid:", bookingId);
+        console.log("✅ Booking reserved & paid:", bookingId);
     }
 
     // Refound Handling
     if (event.type === "charged.refunded") {
         const charge = event.data.object;
-
         const paymentIntentId = charge.payment_intent;
 
         if(!paymentIntentId) {
@@ -90,8 +96,8 @@ async (req, res) => {
 
         booking.status = "refunded";
         booking.paid = false;
-        booking.refundedAt = new Date();
         booking.locked = false;
+        booking.refundedAt = new Date();
 
         await booking.save();
 
@@ -100,6 +106,13 @@ async (req, res) => {
 
     res.json({ recieved: true });
 
-});
+}   catch (error) {
+    console.error("🔥 Webhook processing error:", error);
+    res.status(500).json({ error: "webhook handler failed" });
+
+}
+
+}
+);
 
 export default router;
