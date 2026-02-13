@@ -8,16 +8,19 @@ export const createCheckoutSession = async ( req, res ) => {
         const { bookingId } = req.body;
 
         const booking = await Booking.findById(bookingId);
+        console.log("Booking found?", !!booking);
 
         if (!booking) {
             return res.status(404).json({ error: "Booking not found" });
         }
 
-        if ( booking.status !== "reserved") {
+        if ( booking.status !== "reserved" ) {
             return res.status(400).json({
                 error: "Booking is not available for payment",
             });
         }
+
+        console.log("BookingId from metadata:", bookingId);
 
         if ( booking.paid || booking.locked) {
             return res.status(400).json({

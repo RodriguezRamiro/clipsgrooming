@@ -46,8 +46,15 @@ export const createBooking = async (req, res) => {
     const conflict = await Booking.findOne({
         date,
         time,
-        status: { $in: ["reserved", "paid"] },
+        $or: [
+            {
+        status: "reserved",
         expiresAt: { $gt: new Date() }
+    },
+    {
+        status: "paid"
+    }
+]
     });
 
     if ( conflict ) {
@@ -94,9 +101,16 @@ export const getAvailability = async (req, res) => {
 
       const bookings = await Booking.find({
         date,
-        status: { $in: ["reserved", "paid"] },
-        expiresAt: { $gt: new Date() }
-      });
+        $or: [
+            {
+                status: "reserved",
+                expiresAt: {$gt: new Date() }
+            },
+            {
+                status: "paid"
+            }
+        ]
+    });
 
       const blocked = bookings.map(b => b.time);
       res.json({ blocked });

@@ -1,4 +1,6 @@
-/* backend/src/routes/StripeWebhooks.js */
+/* backend/src/routes/stripeWebhooks.js */
+
+console.log("✅ StripeWebhook router file loaded");
 
 import express from "express";
 import Stripe from "stripe";
@@ -21,7 +23,7 @@ async (req, res) => {
             process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (err) {
-        console.error("Webhook signature verification failed.", err.message);
+        console.error("❌ Webhook signature verification failed.", err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
@@ -45,26 +47,28 @@ async (req, res) => {
             return res.json({ received: true });
         }
 
-        if (!booking) {
-            console.warn("⚠️ Booking not found:", bookingId);
-            return res.json({ received: true });
-        }
-
-        if (booking.paid) {
+        if (booking.status === "paid") {
             console.log("🔁 Booking already paid:", bookingId);
             return res.json({ received: true });
         }
+
+        // Extract paymentintentId
+        const paymentIntentId =
+        typeof session.payment_intent === "string"
+        ? session.payment_intent
+        : session.payment_intent?.id;
 
         booking.status = "paid";
         booking.paid = true;
         booking.locked = true;
         booking.paidAt = new Date();
-        booking.paymentIntentId = session.payment_intent;
+        booking.paymentIntentId = paymentIntentId;
         booking.stripeSessionId = session.id;
 
         await booking.save();
 
         console.log("✅ Booking reserved & paid:", bookingId);
+        console.log("Saved paymentIntentId:", paymentIntentId);
     }
 
     // Refound Handling
@@ -78,7 +82,10 @@ async (req, res) => {
         }
 
         const booking = await Booking.findOne({
-            paymentIntentId: paymentIntentId,
+            $or: [
+                { paymentIntentId: paymentIntentId },
+                { stripeSessionId: charge.metadata?.session_id }
+            ]
         });
 
         if (!booking) {
@@ -86,9 +93,11 @@ async (req, res) => {
             return res.json({ received: true });
         }
 
+        console.log("Refund paymentIntentId:", paymentIntentId);
+
         // Idempotency guard
         if(booking.status === "refunded") {
-            console.log("Already refunded:", booking._id);
+            console.log("🔁 Already refunded:", booking._id);
             return res.json({ received: true });
         }
 
@@ -102,15 +111,13 @@ async (req, res) => {
         console.log("💸 Booking marked as REFUNDED:", booking._id);
     }
 
-    res.json({ recieved: true });
+    res.json({ received: true });
 
 }   catch (error) {
     console.error("🔥 Webhook processing error:", error);
     res.status(500).json({ error: "webhook handler failed" });
-
-}
-
-}
+    }
+  }
 );
 
 export default router;

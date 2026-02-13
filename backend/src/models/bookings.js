@@ -33,7 +33,7 @@ const bookingSchema = new mongoose.Schema(
 
         status: {
             type: String,
-            enum: ["reserved", "paid", "expired"],
+            enum: ["reserved", "paid", "expired", "refunded"],
             default: "reserved",
             index: true,
         },
@@ -49,7 +49,7 @@ const bookingSchema = new mongoose.Schema(
             default: false,
         },
 
-        PaidAt: {
+        paidAt: {
             type: Date,
             paymentIntentId: String,
 
