@@ -597,4 +597,10 @@ on charge.refunded
 send: refound confirmation email
 refound processing timeline
 
-### 
+### Metadata correctly atached end to end
+Temporary bnooking hold (expiresAt)
+Stripe check out payment
+Webhook-driven booking confirmation
+Refound-driven cacellation + slot release
+paymentIntent stored for reconciliation
+Idempotent webhook handling (200 OK Responses)
