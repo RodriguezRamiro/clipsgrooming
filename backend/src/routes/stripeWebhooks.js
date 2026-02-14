@@ -77,16 +77,21 @@ async (req, res) => {
         const paymentIntentId = charge.payment_intent;
 
         if(!paymentIntentId) {
-            console.warn("No paymentIntentId on refound event");
+            console.warn("Refund missing payment_intent");
             return res.json({ received: true });
         }
 
-        const booking = await Booking.findOne({
-            $or: [
-                { paymentIntentId: paymentIntentId },
-                { stripeSessionId: charge.metadata?.session_id }
-            ]
-        });
+        // Fetch PaymentIntent directly form Stripe
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+        const bookingId = charge.metadata?.bookingId;
+
+        if (!bookingId) {
+            console.warn("Refound missing bookingId on PaymentIntent");
+            return res.json({ received: true })
+        }
+
+        const booking = await Booking.findById(bookingId);
 
         if (!booking) {
             console.warn("Booking not found for refound:", paymentIntentId);
@@ -96,19 +101,19 @@ async (req, res) => {
         console.log("Refund paymentIntentId:", paymentIntentId);
 
         // Idempotency guard
-        if(booking.status === "refunded") {
+        if(booking.status === "cancelled") {
             console.log("🔁 Already refunded:", booking._id);
             return res.json({ received: true });
         }
 
-        booking.status = "refunded";
+        booking.status = "cancelled";
         booking.paid = false;
         booking.locked = false;
         booking.refundedAt = new Date();
 
         await booking.save();
 
-        console.log("💸 Booking marked as REFUNDED:", booking._id);
+        console.log("💸 Booking cancelled & slot released:", booking._id);
     }
 
     res.json({ received: true });

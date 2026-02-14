@@ -42,9 +42,17 @@ export const createCheckoutSession = async ( req, res ) => {
                     quantity: 1,
                 },
             ],
+            // On success session level metadata
             metadata: {
                 bookingId: booking._id.toString(),
             },
+            // Payment Intent level metadata on refounds
+            payment_intent_data: {
+                metadata: {
+                    bookingId: booking._id.toString(),
+                },
+            },
+            
             success_url: "http://localhost:5173/payment-success",
             cancel_url: "http://localhost:5173/payment-cancel",
         });
