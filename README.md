@@ -474,7 +474,7 @@ des server handles routing.
 implement the vite proxy to never have that issue.
 
 ### next steps
-Step 1 Build the PaymentSuccess page
+Step 1: Build the PaymentSuccess page
 Step 2: Add Stripe Webhooks
 Step 3: Small fixes & polish
 Step 4: Admin dashboard
@@ -516,3 +516,43 @@ Webhook-driven booking confirmation
 Refound-driven cacellation + slot release
 paymentIntent stored for reconciliation
 Idempotent webhook handling (200 OK Responses)
+
+### Phase 4 admin dashboard
+What admin dashbord should show
+Step 1: Booking overview (core screen)
+Table view
+- Client name
+- Service
+- Date / time
+- Price
+- Status (paid / cancelled / expired)
+- Created at
+- Payment ID
+pulled only from mongoDB
+
+Step 2: Filters
+- Today
+- Upcoming
+- Paid
+- Cancelled
+- Expired (never paid)
+
+Step 3: Booking detail view (modal or page)
+    When clicking a booking
+- Client name / phone
+- PaymentIntent ID
+- Paid at
+- Status
+- Stripe Refound status
+Where admins verify, not mutate
+
+### Backend structure
+backend/
+├── routes/
+ │   ├── admin.routes.js
+ │   ├── bookings.routes.js
+ │   └── payments.routes.js
+ ├── controllers/
+ │   ├── admin.controller.js
+ │   ├── bookings.controller.js
+ │   └── payments.controller.js

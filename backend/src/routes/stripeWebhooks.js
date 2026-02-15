@@ -27,6 +27,14 @@ async (req, res) => {
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
+    try {
+        await handleStripeEvent(event);
+        res.json({ received: true });
+    } catch (err) {
+        console.error("webhook handler error:", err);
+        res.status(500).json({ error: " Webhook processing failed"});
+    }
+
     console.log("🔔 Stripe Event:", event.type);
 
     try {
