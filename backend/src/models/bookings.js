@@ -31,20 +31,32 @@ const bookingSchema = new mongoose.Schema(
             phone: { type: String, required: true, trim: true, },
         },
 
+        // Booking lifecycle state
         status: {
             type: String,
-            enum: ["reserved", "paid", "expired", "cancelled"],
+            enum: [
+                "Pending",
+                "reserved",
+                "paid",
+                "cancelled",
+                "expired",
+                "expired",
+                "refunded",
+            ],
+
             required: true,
             default: "reserved",
             index: true,
         },
 
+        // Auto expiration for unpaid reservations
         expiresAt: {
             type: Date,
             required: true,
             index: true,
         },
 
+        // Payment state
         paid: {
             type: Boolean,
             default: false,
@@ -52,14 +64,20 @@ const bookingSchema = new mongoose.Schema(
 
         paidAt: {
             type: Date,
-            paymentIntentId: String,
+        },
 
+        paymentIntentId: {
+            type: String,
+            index: true,
+        },
+
+        // Slot locked (availability control)
             locked: {
                 type: Boolean,
                 default: false,
+                index: true,
             },
         },
-    },
     { timestamps: true }
 );
 
