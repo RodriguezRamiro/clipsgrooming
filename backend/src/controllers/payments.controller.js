@@ -1,6 +1,6 @@
 /* //backend/src/controllers/payments.controller.js */
 
-import stripe from "../stripe/stripe.js";
+import stripe from "../services/stripe.js";
 import Booking from "../models/bookings.js"
 
 export const createCheckoutSession = async ( req, res ) => {
@@ -52,7 +52,7 @@ export const createCheckoutSession = async ( req, res ) => {
                     bookingId: booking._id.toString(),
                 },
             },
-            
+
             success_url: "http://localhost:5173/payment-success",
             cancel_url: "http://localhost:5173/payment-cancel",
         });
