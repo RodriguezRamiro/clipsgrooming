@@ -556,3 +556,33 @@ backend/
  │   ├── admin.controller.js
  │   ├── bookings.controller.js
  │   └── payments.controller.js
+
+ ### Admin Dashboard
+ Admin Actions (cancel / refound / mark paid)
+ Stripe webhooks
+ Future cron jobs (expired bookings)
+ Stripe no longer mutates Db directly
+ Admin + stripe share same behavior
+
+ ### Admin Dashboard UI flow (React)
+ - Admin goals
+    See all bookings
+    Filter by status/date
+    inspect a booking
+    Take action (cancel / refund)
+    immidiately unlock time slots when appropriate
+
+### File structure
+/admin
+ ├── AdminLayout
+ │    ├── Sidebar
+ │    └── MainContent
+ │
+ ├── BookingsList
+ │    ├── Filters
+ │    └── BookingTable
+ │
+ └── BookingDetails (modal or page)
+      ├── Booking info
+      ├── Client info
+      └── Admin actions
