@@ -35,11 +35,9 @@ const bookingSchema = new mongoose.Schema(
         status: {
             type: String,
             enum: [
-                "Pending",
                 "reserved",
                 "paid",
                 "cancelled",
-                "expired",
                 "expired",
                 "refunded",
             ],
@@ -72,10 +70,10 @@ const bookingSchema = new mongoose.Schema(
         },
 
         // Slot locked (availability control)
-            locked: {
-                type: Boolean,
-                default: false,
-                index: true,
+        locked: {
+            type: Boolean,
+            default: false,
+            index: true,
             },
         },
     { timestamps: true }

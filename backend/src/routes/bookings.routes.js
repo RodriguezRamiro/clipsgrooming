@@ -5,22 +5,17 @@ import {
     createBooking,
     getBookings,
     getAvailability,
-    markBookingPaid
 } from "../controllers/bookings.controller.js";
 
 const router = express.Router()
 
 // Fetch all bookings
-router.get("/", getBookings);
+router.get("/", getBookings); // has to be admin only to prevent leaking client info
 
 // Fetch unavailable slots for date
 router.get("/availability/:date", getAvailability);
 
-// Create a booking
+// Create a booking (reservation)
 router.post("/", createBooking);
-
-// New
-router.patch("/:id/pay", markBookingPaid);
-
 
 export default router;

@@ -27,7 +27,7 @@ export const createCheckoutSession = async ( req, res ) => {
                 error: "This booking has already been paid",
             });
         }
-        const sessions = await stripe.checkout.sessions.create({
+        const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
             line_items: [
@@ -55,6 +55,7 @@ export const createCheckoutSession = async ( req, res ) => {
 
             success_url: "http://localhost:5173/payment-success",
             cancel_url: "http://localhost:5173/payment-cancel",
+            //process.env.FRONTEND_URL
         });
 
         res.json({ url: sessions.url });

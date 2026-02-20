@@ -1,16 +1,17 @@
 /* backend/src/services/stripeHandlers.js */
 
-import Booking from "../models/bookings.js";
 import { markBookingPaid,
          refundBooking } from "./bookingActions.js";
 
-export async function handleStripeEvent(event, stripe) {
+export async function handleStripeEvent(event) {
     switch ( event.type ) {
 
-        case "chackout.session.completed": {
+        case "checkout.session.completed": {
             const session = event.data.object;
-            const bookingId = session.metadata?.bookingId;
 
+            if (session.payment_status !== "paid") return;
+
+            const bookingId = session.metadata?.bookingId;
             if (!bookingId) return;
 
             const paymentIntentId =
@@ -31,11 +32,13 @@ export async function handleStripeEvent(event, stripe) {
 
             if (!bookingId) return;
 
-                await refundBooking({ bookingId });
-                break;
+            await refundBooking({ bookingId });
+            break;
         }
        default:
         // Ignore unhandled events
+        console.log("Unhandled Stripe event:", event.type);
+
         break;
     }
 }

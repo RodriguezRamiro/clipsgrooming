@@ -4,7 +4,6 @@ import Booking from "../models/bookings.js";
 
 // Mark booking as paid (Stripe success)
 
-
 export async function markBookingPaid({
     bookingId,
     paymentIntentId,
@@ -27,10 +26,10 @@ export async function refundBooking({ bookingId }) {
     const booking = await Booking.findById(bookingId);
     if (!booking || booking.status === "refunded" ) return;
 
-    booking.status = refunded;
+    booking.status = "refunded";
     booking.paid = false;
     booking.locked = false;
-    booking.refoundedAt = new Date();
+    booking.refundedAt = new Date();
 
     await booking.save();
 }
@@ -39,7 +38,7 @@ export async function refundBooking({ bookingId }) {
 
 export async function cancelBooking({ bookingId }) {
     const booking = await Booking.findById(bookingId);
-    if (!booking || booking.status === "canclled") return;
+    if (!booking || booking.status === "cancelled") return;
 
     booking.status = "cancelled";
     booking.locked = false;
