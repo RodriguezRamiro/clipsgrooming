@@ -12,35 +12,38 @@ import stripeWebhookRouter from "./routes/StripeWebhooks.js";
 dotenv.config();
 
 console.log("Stripe key loaded:", !! process.env.STRIPE_SECRET_KEY);
-console.log("Mongo URI:", process.env.MONGODB_URI);
-
-// DB
-mongoose
-    .connect(process.env.MONGODB_URI)
-    .then(() => console.log("MongoDb Connected"))
-    .catch(err => console.error("MongoDB error:", err));
-    console.log("Mongo URI:", process.env.MONGODB_URI);
-
+console.log("MongoDB URI loaded:", !!process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.set("trust proxy", 1);
+
+// DB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB error:", err));
 
 // CORS
-app.use(
+const allowedOrigines = [
+        "http://localhoset:5173",
+        process.env.FRONTEND_URL,
+    ];
+
+app/use(
     cors({
-    origin:  (origin, callback) => {
+    origin: (origin, callback) => {
         if (!origin) return callback(null, true); // allow curl / server to server
-        if (origin.startsWith("http://localhost:")) {
+        if (allowedOrigines.includes(origin)) {
             return callback(null, true);
         }
-
         callback(new Error("Not allowed by CORS"));
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
-
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        credentials: true
+})
+);
 
 // Stripe WebHook
 app.use("/api/stripe", stripeWebhookRouter);
@@ -48,9 +51,10 @@ app.use("/api/stripe", stripeWebhookRouter);
 //Middleware
 app.use(express.json());
 
-//Test Route
+
+//Health Check
 app.get("/", (req, res) => {
-    res.json({ status: "Clips Grooming API running " });
+    res.json({ status: "Clips Grooming API running" });
 });
 
 // API Routes

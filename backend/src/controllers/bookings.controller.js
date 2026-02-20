@@ -34,7 +34,19 @@ export const createBooking = async (req, res) => {
             return res.status(400).json({ error: "Missing booking fields" });
         }
 
-        const bookingDateTime = new Date(`${date}T${time}`);
+        if (typeof price !== "number" || price <= 0) {
+            return res.status(400).json({ error: "Invalid price" });
+          }
+
+        if (!client?.name || !client?.phone) {
+            return res.status(400).json({ error: "Invalid client info" });
+        }
+
+        // TODO: Move expiration cleanup to background job
+        // TODO: Protect getBookings route (admin-only)
+
+
+        const bookingDateTime = new Date(`${date}T${time}:00`);
         // Prevent past-time bookings
         if (bookingDateTime.getTime() < now) {
             return res.status(400).json({
@@ -91,6 +103,8 @@ export const getBookings = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Server error" });
     }
+    // TODO: Protect this route (admin-only)
+
 };
 
 // GET /api/bookings/availability/:date
@@ -117,37 +131,4 @@ export const getAvailability = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Server error" });
     }
-};
-
-// PATCH /api/bookings/:id/pay
-export const markBookingPaid = async (req, res) => {
-    try {
-    const { id } = req.params;
-    const now = new Date()
-
-    const booking = await Booking.findById(id);
-    if (!booking) {
-        return res.status(404).json({ error: "Booking not found" });
-    }
-
-    // Already expired
-    if (booking.status === "expired") {
-        return res.status(400).json({ error: "Booking has expired" });
-    }
-
-    // Time-based expiration check
-    if (booking.expiresAt < now) {
-        booking.status = "expired";
-        await booking.save();
-        return res.status(400).json({ error: "Booking has expired" });
-      }
-
-    booking.status = "paid";
-    booking.paidAt = new Date();
-
-    await booking.save();
-    res.json({ booking });
-} catch (err) {
-    res.status(500).json({ error: "Server Error" });
-}
 };
