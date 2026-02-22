@@ -4,6 +4,22 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
     {
+        checkoutSessionId: {
+            type: String,
+            index: true,
+        },
+
+        checkoutSessionUrl: {
+            type: String,
+        },
+
+        paymentIntentId: {
+            type: String,
+            index: true,
+        },
+
+        // Booking Info
+
         service: {
             type: String,
             required: true,
@@ -32,6 +48,7 @@ const bookingSchema = new mongoose.Schema(
         },
 
         // Booking lifecycle state
+
         status: {
             type: String,
             enum: [
@@ -42,8 +59,8 @@ const bookingSchema = new mongoose.Schema(
                 "refunded",
             ],
 
-            required: true,
             default: "reserved",
+            required: true,
             index: true,
         },
 
@@ -51,6 +68,12 @@ const bookingSchema = new mongoose.Schema(
         expiresAt: {
             type: Date,
             required: true,
+            index: true,
+        },
+
+        locked: {
+            type: Boolean,
+            default: false,
             index: true,
         },
 
@@ -64,19 +87,11 @@ const bookingSchema = new mongoose.Schema(
             type: Date,
         },
 
-        paymentIntentId: {
-            type: String,
-            index: true,
+        refundedAt: {
+            type: Date,
         },
-
-        // Slot locked (availability control)
-        locked: {
-            type: Boolean,
-            default: false,
-            index: true,
-            },
-        },
-    { timestamps: true }
+    },
+    { timestamp: true }
 );
 
 /**

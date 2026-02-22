@@ -8,40 +8,57 @@ export async function markBookingPaid({
     bookingId,
     paymentIntentId,
 }) {
-    const booking = await Booking.findById(bookingId);
-    if (!booking || booking.status === "paid") return;
-
-    booking.status = "paid";
-    booking.paid = true;
-    booking.locked = true;
-    booking.paidAt = new Date();
-    booking.paymentIntentId = paymentIntentId;
-
-    await booking.save();
+    await Booking.findOneAndUpdate(
+        {
+            _id: bookingId,
+            status: "reserved",
+        },
+        {
+            $set: {
+                status: "paid",
+                paid: true,
+                locked: true,
+                paidAt: new Date(),
+                paymentIntentId,
+            },
+        },
+        { new: true }
+    )
 }
 
-// Refound booking (admin Or Stripe)
+// Refund booking (admin Or Stripe)
 
 export async function refundBooking({ bookingId }) {
-    const booking = await Booking.findById(bookingId);
-    if (!booking || booking.status === "refunded" ) return;
-
-    booking.status = "refunded";
-    booking.paid = false;
-    booking.locked = false;
-    booking.refundedAt = new Date();
-
-    await booking.save();
+    await Booking.findOneAndUpdate(
+        {
+            _id: bookingId,
+            status: "paid",
+        },
+        {
+            $set: {
+                status: "refunded",
+                paid: false,
+                locked: false,
+                refundedAt: new Date(),
+            },
+        },
+        { new: true }
+    );
 }
 
 // Cancel booking (admin-only, no Stripe)
-
 export async function cancelBooking({ bookingId }) {
-    const booking = await Booking.findById(bookingId);
-    if (!booking || booking.status === "cancelled") return;
-
-    booking.status = "cancelled";
-    booking.locked = false;
-
-    await booking.save()
+    await Booking.findOneAndUpdate(
+        {
+            _id: bookingId,
+            status: "reserved",
+        },
+        {
+            $set: {
+                status: "cancelled",
+                locked: false,
+            },
+        },
+        { new: true }
+    );
 }

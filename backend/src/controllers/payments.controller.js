@@ -7,29 +7,45 @@ export const createCheckoutSession = async ( req, res ) => {
     try {
         const { bookingId } = req.body;
 
-        const booking = await Booking.findById(bookingId);
-        console.log("Booking found?", !!booking);
+        // Validate Input
+        if (!bookingId) {
+            return res.status(400).json({ error: "bookingId is required" });
+        }
 
+        // Fetch Booking
+        const booking = await Booking.findById(bookingId);
         if (!booking) {
             return res.status(404).json({ error: "Booking not found" });
         }
 
+        // Status gate - reserved booking may proceed
         if ( booking.status !== "reserved" ) {
             return res.status(400).json({
                 error: "Booking is not available for payment",
             });
         }
 
-        console.log("BookingId from metadata:", bookingId);
-
-        if ( booking.paid || booking.locked) {
-            return res.status(400).json({
-                error: "This booking has already been paid",
-            });
+        // Hard expiration enforcement
+        if (booking.expiresAt < new Date()) {
+            booking.status ="expired";
+            await booking.save();
+            return res.status(400).json({ error: "Booking has expired" });
         }
+
+        // Idempotency: reuse existing checkout session if present
+        if (booking.checkoutSessionUrl) {
+            return res.json({ url: booking.checkoutSessionUrl });
+        }
+
+        // Lock booking Before creating Stripe Session
+        booking.locked = true;
+        await booking.save();
+
+        // Create stripe checkout session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
+
             line_items: [
                 {
                     price_data: {
@@ -37,30 +53,44 @@ export const createCheckoutSession = async ( req, res ) => {
                         product_data: {
                             name: booking.service,
                         },
-                        unit_amount: booking.price * 100, //cents
+                        unit_amount: booking.price * 100 // cents
                     },
                     quantity: 1,
                 },
             ],
-            // On success session level metadata
+
+            // Session-level metadata
             metadata: {
                 bookingId: booking._id.toString(),
             },
-            // Payment Intent level metadata on refounds
+
+            // PaymentIntet-level metadata (used for refounds)
             payment_intent_data: {
                 metadata: {
                     bookingId: booking._id.toString(),
                 },
             },
 
-            success_url: "http://localhost:5173/payment-success",
-            cancel_url: "http://localhost:5173/payment-cancel",
-            //process.env.FRONTEND_URL
+            success_url: `${process.env.FRONTEND_URL}/payment-sucess`,
+            cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
         });
 
-        res.json({ url: sessions.url });
+        // Persis session for idempotency + recovery
+        booking.checkoutSessionId = session.id;
+        booking.checkoutSessionURL = session.url;
+        await booking.save();
+
+        // Return checkout URL
+        res.json({ url: session.url });
+
     } catch (err) {
-        console.error("Stripe checkout error:", err);
-        res.status(500).json({ error: "Stripe checkout failed" });
+        console.error("Sripe checkout error:", err);
+
+        // Optional: unlock booking if stripe creation failed
+        if (err && err.bookingId) {
+            await Booking.findByIdAndUpdate(err.bookingId, { locked: false });
+        }
+
+        res.status(500).json({ error: "Stripe checkout failed"});
     }
 };
