@@ -1,38 +1,74 @@
 /* //backend/src/controllers/payments.controller.js */
 
+import mongoose from "mongoose";
 import stripe from "../services/stripe.js";
 import Booking from "../models/bookings.js"
 
+/**
+ * Middleware: validate checkout request
+ * Prevent invalid, expired, or replayed payment attempts
+ */
+
+export const validateCheckoutRequest = async (req, res, next) => {
+try {
+    const { bookingId } = req.body;
+
+    // booking id present
+    if (!bookingId) {
+        return res.status(400).json({ error: "bookingId is required" });
+    }
+
+    // BookingId valid
+    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
+        return res.status(400).json({ error: "invalid bookingId" });
+    }
+
+    // Fetch Booking
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+        return res.status(404).json({ error: "Booking not found" });
+    }
+
+    // Status gate - reserved booking may proceed
+    if ( booking.status !== "reserved" ) {
+        return res.status(400).json({
+            error: "Booking is not available for payment",
+        });
+    }
+
+    // Expiration enforcement
+    if (booking.expiresAt < new Date()) {
+        booking.status ="expired";
+        await booking.save();
+        return res.status(400).json({ error: "Booking has expired" });
+    }
+
+    // Already paid / refunded safety
+    if (booking.paid || booking.paymentIntentId) {
+        return res.status(400).json({
+            error: "Booking has already been paid",
+        });
+    }
+
+    // Attach booking for controller use
+    req.booking = booking;
+    next();
+} catch (err) {
+    console.error("Checkout validation error:", err);
+    res.status(500).json({ error: "Checkout validation failed" })
+}
+
+};
+
+/**
+ * Controller create Stripe checkout session
+ */
+
 export const createCheckoutSession = async ( req, res ) => {
+    const booking = req.booking; // injected by middleware
+
     try {
-        const { bookingId } = req.body;
-
-        // Validate Input
-        if (!bookingId) {
-            return res.status(400).json({ error: "bookingId is required" });
-        }
-
-        // Fetch Booking
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ error: "Booking not found" });
-        }
-
-        // Status gate - reserved booking may proceed
-        if ( booking.status !== "reserved" ) {
-            return res.status(400).json({
-                error: "Booking is not available for payment",
-            });
-        }
-
-        // Hard expiration enforcement
-        if (booking.expiresAt < new Date()) {
-            booking.status ="expired";
-            await booking.save();
-            return res.status(400).json({ error: "Booking has expired" });
-        }
-
-        // Idempotency: reuse existing checkout session if present
+        // Idempotency: reuse session if exists
         if (booking.checkoutSessionUrl) {
             return res.json({ url: booking.checkoutSessionUrl });
         }
@@ -45,14 +81,12 @@ export const createCheckoutSession = async ( req, res ) => {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
-
             line_items: [
                 {
                     price_data: {
                         currency: "usd",
                         product_data: {
-                            name: booking.service,
-                        },
+                            name: booking.service },
                         unit_amount: booking.price * 100 // cents
                     },
                     quantity: 1,
@@ -77,7 +111,7 @@ export const createCheckoutSession = async ( req, res ) => {
 
         // Persis session for idempotency + recovery
         booking.checkoutSessionId = session.id;
-        booking.checkoutSessionURL = session.url;
+        booking.checkoutSessionUrl = session.url;
         await booking.save();
 
         // Return checkout URL
@@ -86,10 +120,10 @@ export const createCheckoutSession = async ( req, res ) => {
     } catch (err) {
         console.error("Sripe checkout error:", err);
 
-        // Optional: unlock booking if stripe creation failed
-        if (err && err.bookingId) {
-            await Booking.findByIdAndUpdate(err.bookingId, { locked: false });
-        }
+        // Unlock booking if stripe creation failed
+        await Booking.findByIdAndUpdate(booking._id, {
+            locked: false,
+        });
 
         res.status(500).json({ error: "Stripe checkout failed"});
     }

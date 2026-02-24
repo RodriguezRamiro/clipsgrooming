@@ -110,3 +110,4 @@ bookingSchema.index(
 );
 
 export default mongoose.model("Booking", bookingSchema);
+
