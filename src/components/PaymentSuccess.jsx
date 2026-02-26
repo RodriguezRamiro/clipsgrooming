@@ -66,7 +66,7 @@ function PaymentSuccess() {
                         Your payment may still be processing.
                         if this page does not update, please contact support.
                     </p>
-                    <button classNmae="booking-btn" onClick={() +> navigate("/")}>
+                    <button classNmae="booking-btn" onClick={() => navigate("/")}>
                         Back to Home
                     </button>
                 </section>
