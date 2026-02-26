@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getBookings } from "../utils/api";
+import { getBookingById } from "../utils/api";
 
 function PaymentSuccess() {
     const navigate = useNavigate();
@@ -19,12 +19,11 @@ function PaymentSuccess() {
 
         const interval = setInterval(async () => {
             try {
-                const { bookings } = await getBookings();
-                const booking = bookings.find(b => b._id === bookingId);
+                const { booking } = await getBookingById(bookingId);
 
-                if (booking?.status === "paid") {
+                if (booking.status === "paid") {
                     setStatus("paid");
-                    cleatInterval(interval);
+                    clearInterval(interval);
 
                     // optional auto-redirect
                     setTimeout(() => navigate("/"), 7000);
@@ -48,7 +47,7 @@ function PaymentSuccess() {
     }, [bookingId, attempts, navigate]);
 
     // UI
-    if (status === "chekcing") {
+    if (status === "checking") {
         return (
             <section className="checkout success">
             <h2>Confirm Payment...</h2>
@@ -66,7 +65,7 @@ function PaymentSuccess() {
                         Your payment may still be processing.
                         if this page does not update, please contact support.
                     </p>
-                    <button classNmae="booking-btn" onClick={() => navigate("/")}>
+                    <button className="booking-btn" onClick={() => navigate("/")}>
                         Back to Home
                     </button>
                 </section>

@@ -107,6 +107,22 @@ export const getBookings = async (req, res) => {
 
 };
 
+// GET /api/bookings/:id
+export const getBookingById = async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id);
+
+        if (!booking) {
+            return res.status(404).json({ error: "Booking not found" });
+        }
+
+        res.json({ booking });
+    } catch (err) {
+        console.error("Get booking error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+};
+
 // GET /api/bookings/availability/:date
 export const getAvailability = async (req, res) => {
     try {

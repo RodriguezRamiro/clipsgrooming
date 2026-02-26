@@ -29,6 +29,17 @@ export async function getBookings() {
     return res.json();
 }
 
+export async function getBookingById(id) {
+    const res = await fetch(`${API_BASE}/bookings/${id}`);
+
+    if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to fetch booking");
+    }
+
+    return res.json(); // { booking }
+}
+
 export async function markBookingPaid(id) {
     const res = await fetch(`${API_BASE}/bookings/${id}/pay`, {
         method: "PATCH",
