@@ -6,9 +6,7 @@ import bodyParser from "body-parser";
 import { handleStripeEvent } from "../services/stripeHandlers.js";
 
 const router = express.Router()
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2026-01-28.clover",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post("/webhook",
 bodyParser.raw({ type: "application/json" }),

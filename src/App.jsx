@@ -73,7 +73,7 @@ function App() {
     {/* Future Routes */}
     </Routes>
 
-    <TestBooking />
+    {/*<TestBooking />*/}
 
     <Footer />
     </>

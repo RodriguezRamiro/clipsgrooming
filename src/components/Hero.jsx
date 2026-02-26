@@ -2,7 +2,7 @@
 
 import profileImg from "../assets/barberProfile.jpg"
 
-funciton Hero() {
+function Hero() {
     const scrollToServices = () => {
         document.getElementById("services").scrollIntoView({
             behavior: "smooth",
