@@ -3,6 +3,8 @@
 import Booking from "../models/bookings.js";
 import { markBookingPaid,
          refundBooking } from "./bookingActions.js";
+import { sendCustomerConfirmation,
+         sendAdminNotification } from "../utils/email.js";
 
 export async function handleStripeEvent(event) {
     const eventId = event.id;
@@ -46,10 +48,19 @@ export async function handleStripeEvent(event) {
                 paymentIntentId,
             });
             console.log("Booking marked paid:", bookingId);
-            break;
+
+        //Send Emails (non-blocking safety)
+        try {
+            await sendCustomerConfirmation(booking);
+            await sendAdminNotification(booking)
+        } catch (emailErr) {
+            console.error("email send failed:", emailErr);
         }
 
-        // Refound Created
+        break;
+    }
+
+        // Refund Created
         case "refund.created": {
             const refund = event.data.object;
             const bookingId = refund.metadata?.bookingId;

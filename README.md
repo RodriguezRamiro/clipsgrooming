@@ -586,3 +586,9 @@ backend/
       ├── Booking info
       ├── Client info
       └── Admin actions
+
+### Email Confirmations
+Tooling choice (simple & free-friendly) - Nodemailer
+Prevents duplicate emails
+Prevents frontend spoofing
+Works even if the user closes the browser
