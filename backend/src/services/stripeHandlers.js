@@ -49,18 +49,22 @@ export async function handleStripeEvent(event) {
             });
             console.log("Booking marked paid:", bookingId);
 
-        //Send Emails (non-blocking safety)
-        try {
-            await sendCustomerConfirmation(booking);
-            await sendAdminNotification(booking)
-        } catch (emailErr) {
-            console.error("email send failed:", emailErr);
+            // Fetch updated booking
+            const updateBooking = await Booking.findById(bookingId);
+
+            // Send emails
+            try {
+                await sendCustomerConfirmation(updateBooking);
+                await sendAdminNotification(updateBooking)
+            } catch (emailErr) {
+                console.error("email send failed:", emailErr);
+            }
+
+            break;
         }
 
-        break;
-    }
-
         // Refund Created
+        //Send Emails (non-blocking safety)
         case "refund.created": {
             const refund = event.data.object;
             const bookingId = refund.metadata?.bookingId;

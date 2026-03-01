@@ -25,7 +25,7 @@ function PaymentSuccess() {
                     setStatus("paid");
                     clearInterval(interval);
 
-                    // optional auto-redirect
+                    // auto-redirect
                     setTimeout(() => navigate("/"), 7000);
                 } else {
                     setAttempts(a => a + 1);
