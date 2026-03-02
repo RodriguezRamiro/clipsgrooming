@@ -71,6 +71,9 @@ function App() {
   <Route path="/about" element={<Profile />} />
 
     {/* Future Routes */}
+  <Route path="/admin" element={<AdminDashboard />}>
+    <Route path="bookings" element={<AdminBookingPage />} />
+  </Route>
     </Routes>
 
     {/*<TestBooking />*/}
