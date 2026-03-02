@@ -592,3 +592,24 @@ Tooling choice (simple & free-friendly) - Nodemailer
 Prevents duplicate emails
 Prevents frontend spoofing
 Works even if the user closes the browser
+
+### AdminDashboard Layout
+Sidebar plus outlet
+Route protection admin auth middleware
+Booking list inside dashboard
+Admin stats (total bookings, revenue, refounds)
+user management
+
+### Sidebar UX
+Instantly readable
+Clearly separated from Customers UI
+Scalable
+Minima
+Keyboard and mouse friendly
+Structure
+    - Dashboard
+    - Bookings
+    - Payments
+    - Refounds
+    - Settings
+    - Logout

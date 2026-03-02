@@ -457,6 +457,83 @@ body {
 
 /* Payment Successfull */
 
+
+/* AdminDashboard */
+.admin-dashboard {
+  display: flex;
+  height: 100hv;
+}
+
+.admin-main {
+  flex: 1;
+  background: #f8fafc;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* admin-sdebar */
+.admin-sidebar {
+  width: 240px;
+  background: #0f172a;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.admin-logo {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1e293b;
+}
+
+.admin-logo h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.admin-nav {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  color: #cbd5f5;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.admin-link.active {
+  background: #2563eb;
+  color: white;
+}
+
+.admin-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #1e293b;
+}
+
+.logout-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fca5a5;
+  cursor: pointer;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background: #1e293b;
+}
+
 /* BookingDetailsModal */
 
 .modal-backdrop {
