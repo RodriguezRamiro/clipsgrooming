@@ -610,6 +610,6 @@ Structure
     - Dashboard
     - Bookings
     - Payments
-    - Refounds
+    - Refunds
     - Settings
     - Logout

@@ -5,8 +5,8 @@ import {
     cancelBooking,
     refundBooking,
 } from "../services/bookingActions.js";
+import { requireAdmin } from "../middleware/requireAdmin.js";
 
-import { requireAdmin } from "../middleware/auth.js";
 
 router.use(requireAdmin);
 
