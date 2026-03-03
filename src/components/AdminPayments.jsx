@@ -33,7 +33,7 @@ export default function AdminPayments() {
     );
 }
 
-funciton Table({ data }) {
+function Table({ data }) {
     return (
         <table>
             <thread>

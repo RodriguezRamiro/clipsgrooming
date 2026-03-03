@@ -1,7 +1,6 @@
 /* src/components/AdminDashboard.jsx */
 
-import AdminSidebar from "../../components/admin/AdminSidebar";
-import AdminTopBar from "../../components/admin/AdminTopBar";
+import AdminSidebar from "../components/AdminSidebar.jsx";
 import { Outlet } from "react-router-dom";
 
 export default function AdminDashboard() {
