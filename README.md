@@ -613,3 +613,10 @@ Structure
     - Refunds
     - Settings
     - Logout
+
+### Role Based admin controls
+JWT Admin Authentication
+Revenue metrics on dashboard
+Calendar-based booking view
+Polished email templates
+Deployment hardening

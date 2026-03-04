@@ -14,14 +14,14 @@ export default function AdminHome() {
         async function fetchStats() {
             const res = await fetch("/api/admin/bookings", {
                 headers: {
-                    "x-admin-secret": import.meta.env.VITE_ADMIN_SECRET,
+                    Authorization: `Bearer  ${token}`,
                 },
             });
 
             const data = await res.json();
 
             setStats({
-                total: data.length;
+                total: data.length,
                 paid: data.filter(b => b.status === "paid").lenngth,
                 pending: data.filter(b => b.status === "pending").length,
                 refunded: data.filter(b => b.status === "refunded").length,

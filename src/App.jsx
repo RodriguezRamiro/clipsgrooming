@@ -10,10 +10,11 @@ import Services from "./components/Services";
 import Checkout from "./components/Checkout";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import AdminHome from "./components/AdminHome";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminBookingPage from "./components/AdminBookingPage";
 import AdminPayments from "./components/AdminPayments";
-import TestBooking from "./components/TestBooking";
 import Footer from "./components/Footer";
 
 function App() {
@@ -73,11 +74,18 @@ function App() {
 
   <Route path="/about" element={<Profile />} />
 
-    {/* Future Routes */}
-  <Route path="/admin" element={<AdminDashboard />}>
+    {/* Admin Routes */}
+  <Route path="/admin" element={
+  <ProtectedAdminRoute>
+    <AdminDashboard />
+    </ProtectedAdminRoute>
+  } >
+    <Route index element={<AdminHome />} />
     <Route path="bookings" element={<AdminBookingPage />} />
     <Route path="payments" element={<AdminPayments />} />
     <Route path="refunds" element={<AdminPayments /> } />
+
+    {/* Future Routes */}
   </Route>
     </Routes>
 
