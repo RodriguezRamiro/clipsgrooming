@@ -620,3 +620,10 @@ Revenue metrics on dashboard
 Calendar-based booking view
 Polished email templates
 Deployment hardening
+Hashed password storage
+
+JWT token generation
+Role-based middleware
+Protected backend routes
+Protected frontend routes
+Secure admin login flow

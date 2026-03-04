@@ -1,6 +1,6 @@
 /* //backend/src/server.js */
 
-import "./config/env.js"; 
+import "./config/env.js";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -8,6 +8,7 @@ import cors from "cors";
 import bookingsRouter from "./routes/bookings.routes.js";
 import paymentsRouter from "./routes/payments.routes.js";
 import stripeWebhookRouter from "./routes/StripeWebhooks.js";
+import adminAuthRouter from "./routes/adminAuth.routes.js";
 
 
 console.log("Stripe key loaded:", !!process.env.STRIPE_SECRET_KEY);
@@ -26,7 +27,7 @@ mongoose
 
 // CORS
 const allowedOrigins = [
-        "http://localhoset:5173",
+        "http://localhost:5173",
         process.env.FRONTEND_URL,
     ];
 
@@ -59,6 +60,7 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
+app.use("/api/admin/auth", adminAuthRouter);
 
 
 app.listen(PORT, () => {
