@@ -9,7 +9,7 @@ export default function AdminDashboard() {
             <AdminSidebar />
 
             <div className="admin-main">
-            <AdminTopBar />
+            {/* <AdminTopBar /> */}
 
             <div className="admin-content">
                 {/* Nested admin pages render here */}

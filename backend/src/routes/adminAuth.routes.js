@@ -9,9 +9,10 @@ const router = express.Router();
 
 // Admin login
 router.post("/login", async (req, res) => {
-    const { email, password }= req.body;
+    const { email, password } = req.body;
 
     const admin = await Admin.findOne({ email });
+    
     if (!admin) {
         return res.status(401).json({ error: "Invalid credentials" });
     }

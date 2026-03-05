@@ -17,7 +17,7 @@ await mongoose.connect(process.env.MONGODB_URI);
 const hashedPassword = await bcrypt.hash(process.argv[2], 10);
 
 await Admin.create({
-    email: "admin@clipgrooming.com",
+    email: "admin@clipsgrooming.com",
     password: hashedPassword,
 });
 

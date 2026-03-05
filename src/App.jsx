@@ -10,11 +10,15 @@ import Services from "./components/Services";
 import Checkout from "./components/Checkout";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCancel from "./components/PaymentCancel";
+
+/* Admin Routes */
+import AdminLogin from "./components/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import AdminHome from "./components/AdminHome";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminBookingPage from "./components/AdminBookingPage";
 import AdminPayments from "./components/AdminPayments";
+
 import Footer from "./components/Footer";
 
 function App() {
@@ -75,6 +79,7 @@ function App() {
   <Route path="/about" element={<Profile />} />
 
     {/* Admin Routes */}
+  <Route path="/admin/login" element={<AdminLogin  />} />
   <Route path="/admin" element={
   <ProtectedAdminRoute>
     <AdminDashboard />
