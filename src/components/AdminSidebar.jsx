@@ -14,7 +14,7 @@ export default function AdminSidebar() {
             <nav className="admin-nav">
                 <NavItem to="/admin" label="Dashboard" icon="📊" />
                 <NavItem to="/admin/bookings" label="Bookings" icon="📅" />
-                <NavItem to="/adminpayments" label="Payments" icon="💳" />
+                <NavItem to="/admin/payments" label="Payments" icon="💳" />
                 <NavItem to="/admin/refunds" label="Refunds" icon="↩️" />
                 <NavItem to="/admin/settings" label="Settings" icon="⚙️" />
             </nav>
@@ -25,7 +25,7 @@ export default function AdminSidebar() {
             </aside>
             );
     }
-function NavItems({ to, label, icon }) {
+function NavItem({ to, label, icon }) {
     return (
         <NavLink
         to={to}

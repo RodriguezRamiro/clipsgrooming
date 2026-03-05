@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+
 export default function AdminHome() {
-    consst [statusbar, setStats] = useState({
+
+    const token = localStorage.getItem("adminToken");
+
+    const [stats, setStats] = useState({
         total: 0,
         paid: 0,
         pending: 0,
@@ -12,6 +16,12 @@ export default function AdminHome() {
 
     useEffect(() => {
         async function fetchStats() {
+
+            if (!token) {
+                console.error("No admin token found");
+                return
+            }
+
             const res = await fetch("/api/admin/bookings", {
                 headers: {
                     Authorization: `Bearer  ${token}`,
@@ -22,14 +32,14 @@ export default function AdminHome() {
 
             setStats({
                 total: data.length,
-                paid: data.filter(b => b.status === "paid").lenngth,
+                paid: data.filter(b => b.status === "paid").length,
                 pending: data.filter(b => b.status === "pending").length,
                 refunded: data.filter(b => b.status === "refunded").length,
             });
         }
 
         fetchStats();
-    }, []);
+    }, [token]);
 
     return (
         <div>
