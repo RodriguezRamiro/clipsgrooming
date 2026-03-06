@@ -2,14 +2,12 @@
 
 import jwt from "jsonwebtoken";
 
-export function requireAdmin(rew, res, next) {
-    const authHeader = req.header.authorization;
+export function requireAdmin(req, res, next) {
+    const token = req.headers.authorization?.split(" ")[1];
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
         return res.status(401).json({ error: "Unauthorized" });
     }
-
-    const token = authHeader.split(" ")[1];
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -20,7 +18,7 @@ export function requireAdmin(rew, res, next) {
 
         req.admin = decoded;
         next();
-    } catch (err) {
+    } catch {
         return res.status(401).json({ error: "Invalid token" });
     }
 }

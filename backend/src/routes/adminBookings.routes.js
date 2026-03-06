@@ -44,6 +44,6 @@ router.post("/:id/cancel", async (req, res) => {
 router.post("/:id/refund", async (req, res) => {
     await refundBooking({ bookingId: req.params.id });
     res.json({ success: true });
-});
+}); 
 
 export default router;
