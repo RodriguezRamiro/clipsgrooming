@@ -9,6 +9,7 @@ import bookingsRouter from "./routes/bookings.routes.js";
 import paymentsRouter from "./routes/payments.routes.js";
 import stripeWebhookRouter from "./routes/StripeWebhooks.js";
 import adminAuthRouter from "./routes/adminAuth.routes.js";
+import adminBookingRoutes from "./routes/adminBookings.routes.js";
 
 
 console.log("Stripe key loaded:", !!process.env.STRIPE_SECRET_KEY);
@@ -61,6 +62,7 @@ app.get("/", (req, res) => {
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/admin/auth", adminAuthRouter);
+app.use("/api/admin/bookings",  adminBookingRoutes);
 
 
 app.listen(PORT, () => {
