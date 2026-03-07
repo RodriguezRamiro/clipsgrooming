@@ -24,11 +24,16 @@ export default function AdminHome() {
 
             const res = await fetch("/api/admin/bookings", {
                 headers: {
-                    Authorization: `Bearer  ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
             const data = await res.json();
+
+            if (!Array.isArray(data)) {
+                console.error("Unexpected API response:", data);
+                return;
+            }
 
             setStats({
                 total: data.length,
@@ -38,8 +43,7 @@ export default function AdminHome() {
             });
         }
 
-        fetchStats();
-    }, [token]);
+    });
 
     return (
         <div>
