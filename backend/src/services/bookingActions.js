@@ -9,10 +9,12 @@ export async function markBookingPaid({
     paymentIntentId,
 }) {
     await Booking.findOneAndUpdate(
+
         {
             _id: bookingId,
-            status: "reserved",
+            status: { $in: ["reserved", "expired"] }
         },
+
         {
             $set: {
                 status: "paid",
@@ -24,6 +26,8 @@ export async function markBookingPaid({
         },
         { new: true }
     )
+
+
 }
 
 // Refund booking (admin Or Stripe)

@@ -14,11 +14,14 @@ export async function handleStripeEvent(event) {
         // Payment completed
         case "checkout.session.completed": {
             const session = event.data.object;
+            console.log("Stripe session received:", session.id);
 
         // Safety gate
             if (session.payment_status !== "paid") return;
 
             const bookingId = session.metadata?.bookingId;
+            console.log("BookinId:", bookingId);
+
             if (!bookingId) {
                 console.warn("stripe session missing bookingId", eventId);
                 return;
@@ -37,6 +40,7 @@ export async function handleStripeEvent(event) {
             typeof session.payment_intent === "string"
                 ? session.payment_intent
                 : session.payment_intent?.id;
+                console.log("PaymentIntent:", session.payment_intent);
 
             if (!paymentIntentId) {
                 console.warn("missing paymentIntentId", eventId);
@@ -50,12 +54,12 @@ export async function handleStripeEvent(event) {
             console.log("Booking marked paid:", bookingId);
 
             // Fetch updated booking
-            const updateBooking = await Booking.findById(bookingId);
+            const updatedBooking = await Booking.findById(bookingId);
 
             // Send emails
             try {
-                await sendCustomerConfirmation(updateBooking);
-                await sendAdminNotification(updateBooking)
+                await sendCustomerConfirmation(updatedBooking);
+                await sendAdminNotification(updatedBooking)
             } catch (emailErr) {
                 console.error("email send failed:", emailErr);
             }

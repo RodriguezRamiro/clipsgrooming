@@ -32,11 +32,10 @@ async (req, res) => {
 
     try {
         await handleStripeEvent(event);
-        res.sendStatus(200);
     } catch (err) {
         console.error("webhook handler error:", err);
-        res.status(500).json({ error: " Webhook processing failed"});
     }
+    res.sendStatus(200);
   }
 );
 
