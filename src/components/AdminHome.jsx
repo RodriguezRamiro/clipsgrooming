@@ -118,7 +118,7 @@ export default function AdminHome() {
 
 function StatCard({ label, value }) {
     return (
-        <div className="stat-card">
+        <div className="stats-card">
             <h3>{label}</h3>
             <p>{value}</p>
 
