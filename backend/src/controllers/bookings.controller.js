@@ -60,7 +60,7 @@ export const createBooking = async (req, res) => {
         time,
         $or: [
             {
-        status: "reserved",
+        status: { $in: ["reserved", "paid"] },
         expiresAt: { $gt: new Date() }
     },
     {
