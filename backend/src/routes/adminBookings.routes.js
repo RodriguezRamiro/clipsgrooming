@@ -44,6 +44,48 @@ router.post("/:id/cancel", async (req, res) => {
 router.post("/:id/refund", async (req, res) => {
     await refundBooking({ bookingId: req.params.id });
     res.json({ success: true });
-}); 
+});
+
+// Admin Stats
+router.get("/stats/overview", async (req, res) => {
+    try {
+        const total = await Booking.countDocuments();
+
+        const paid = await Booking.countDocuments({
+            status: "paid"
+        });
+
+        const reserved = await Booking.countDocuments({
+            status: "reserved"
+        });
+
+        const revenue = await Booking.aggregate([
+            { $match: { status: "paid" } },
+            { $group: { _id: null, total: { $sum: "$price" } } }
+        ]);
+
+        res.json({
+            total,
+            paid,
+            reserved,
+            revenue: revenue[0]?.total || 0
+        });
+    } catch (err) {
+        res.status(500).json({ error: "failed to load stats" });
+    }
+});
+
+// Upcoming Appointments
+router.get("/upcoming", async ( req, res ) => {
+    try {
+        const bookings = await Booking.find({
+            status: { $in: ["reserved", "paid"] }
+        }). sort({ date: 1, time: 1 });
+
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch upcoming bookings" });
+    }
+});
 
 export default router;
