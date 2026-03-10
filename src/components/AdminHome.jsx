@@ -1,6 +1,7 @@
 /* //src/components/AdminHome.jsx */
 
 import { useEffect, useState } from "react";
+import "../styles.admin.css";
 
 
 export default function AdminHome() {
@@ -48,7 +49,7 @@ export default function AdminHome() {
     }, []);
 
     return (
-        <div>
+        <div className="admin-container">
             <h1>Admin Dashboard</h1>
 
             <div className="stats-grid">
