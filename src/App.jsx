@@ -16,6 +16,7 @@ import AdminLogin from "./components/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import AdminHome from "./components/AdminHome";
 import AdminDashboard from "./components/AdminDashboard";
+import AdminCalendar from "./components/AdminCalendar";
 import AdminBookingPage from "./components/AdminBookingPage";
 import AdminPayments from "./components/AdminPayments";
 
@@ -86,6 +87,7 @@ function App() {
     </ProtectedAdminRoute>
   } >
     <Route index element={<AdminHome />} />
+    <Route path="/admin/calendar" element={<AdminCalendar />} />
     <Route path="bookings" element={<AdminBookingPage />} />
     <Route path="payments" element={<AdminPayments />} />
     <Route path="refunds" element={<AdminPayments /> } />

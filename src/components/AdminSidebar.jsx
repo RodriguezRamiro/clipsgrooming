@@ -14,6 +14,7 @@ export default function AdminSidebar() {
             <nav className="admin-nav">
                 <NavItem to="/admin" label="Dashboard" icon="📊" />
                 <NavItem to="/admin/bookings" label="Bookings" icon="📅" />
+                <NavItem to="/admin/calendar" label="Calendar" icon="🗓️" />
                 <NavItem to="/admin/payments" label="Payments" icon="💳" />
                 <NavItem to="/admin/refunds" label="Refunds" icon="↩️" />
                 <NavItem to="/admin/settings" label="Settings" icon="⚙️" />
