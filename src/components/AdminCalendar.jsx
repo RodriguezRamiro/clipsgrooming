@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns"
 import enUS from "date-fns/locale/en-US";
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const locales = {
@@ -18,7 +19,6 @@ const localizer = dateFnsLocalizer({
 
 export default function AdminCalendar() {
 
-    const token = localStorage.getItem("adminToken");
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -26,15 +26,25 @@ export default function AdminCalendar() {
     }, []);
 
     async function loadBookings() {
+
+        const token = localStorage.getItem("adminToken");
+        console.log("admintoken", token)
+
         const res = await fetch("/api/admin/bookings", {
             headers: {
-                Authorizaiton: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
         });
 
-        const bookings = await res.json();
 
-        const events = bookings.map(b => {
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+            console.error("Admin bookings API error:", data);
+            return
+        }
+
+        const events = data.map(b => {
 
             const start = new Date(`${b.date} ${b.time}`);
             const duration = b.duration || 60
@@ -57,8 +67,8 @@ export default function AdminCalendar() {
 
             <Calendar
             localizer={localizer}
-            ebents={events}
-            sartsAccessor="start"
+            events={events}
+            startAccessor="start"
             endAccessor="end"
             style={{ height: 650}}
             />
